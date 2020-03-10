@@ -1,0 +1,12 @@
+{
+    "compilerOptions": {
+      "target": "esnext",      
+      "isolatedModules": true,
+      "esModuleInterop": true,
+      "moduleResolution": "node",
+      "resolveJsonModule": true
+    },
+    "include": ["./src/scripts/index.d.ts"],
+    "exclude": [],
+    "compileOnSave": false
+}

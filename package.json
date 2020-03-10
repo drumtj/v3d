@@ -1,0 +1,59 @@
+{
+  "name": "@drumtj/v3d",
+  "version": "1.0.0",
+  "description": "simple 3d view",
+  "main": "./dist/v3d.js",
+  "scripts": {
+    "start": "webpack-dev-server",
+    "build": "webpack -p --mode=production --optimize-minimize",
+    "release": "npm run build && npm run deploy && np --no-cleanup --yolo --no-release-draft",
+    "_release": "npm run build && npm run deploy",
+    "deploy": "git add -A && git commit -m 'deploy' && git push origin master",
+    "deploy_with_page": "git add -A && git commit -m 'deploy' && git push origin master && git subtree push --prefix examples origin gh-pages",
+    "pull": "git pull origin master --allow-unrelated-histories"
+  },
+  "keywords": [
+    "3d",
+    "css3d",
+    "three",
+    "3dview"
+  ],
+  "homepage": "https://github.com/drumtj/v3d",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/drumtj/v3d"
+  },
+  "bugs": {
+    "url": "https://github.com/drumtj/v3d/issues",
+    "email": "drumtj@gmail.com"
+  },
+  "author": {
+    "name": "tj",
+    "email": "drumtj@gmail.com"
+  },
+  "engines": {
+    "node": ">= 0.4.0"
+  },
+  "contributors": [],
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/cli": "^7.7.5",
+    "@babel/core": "^7.7.5",
+    "@babel/plugin-transform-arrow-functions": "^7.7.4",
+    "@babel/plugin-transform-async-to-generator": "^7.7.4",
+    "@babel/plugin-transform-classes": "^7.7.4",
+    "@babel/polyfill": "^7.7.0",
+    "@babel/preset-env": "^7.7.6",
+    "html-webpack-plugin": "^3.2.0",
+    "babel-loader": "^8.0.4",
+    "ts-loader": "^6.2.1",
+    "typescript": "^3.7.3",
+    "webpack": "^4.41.2",
+    "webpack-cli": "^3.3.10",
+    "webpack-dev-server": "^3.10.1",
+    "webpack-sources": "^1.3.0"
+  },
+  "dependencies": {
+    "three": "^0.111.0"
+  }
+}
