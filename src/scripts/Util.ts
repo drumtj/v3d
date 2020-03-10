@@ -316,18 +316,7 @@ export function getDateString(d){
   return d.getFullYear() + "-" + getStringNumber(d.getMonth()+1, 2) + "-" + getStringNumber(d.getDate(), 2);
 }
 
-export function getParamFromURL(){
-  let p = queryString.parse(window.location.search);
-  console.error("param", p);
-  return p;
-  // return window.location.search.substr(1).split('&').reduce((r,v)=>{
-  //   let arr = v.split('=');
-  //   let key = arr.shift();
-  //   let value = arr.join('=');
-  //   r[key] = value;
-  //   return r;
-  // }, {})
-}
+
 
 export function getParamString(obj){
   return Object.keys(obj).map(k=>k+'='+(obj[k]!==undefined?obj[k]:'')).join('&');

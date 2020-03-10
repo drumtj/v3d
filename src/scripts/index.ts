@@ -2,7 +2,6 @@ import * as THREE from 'three';
 // import axios from 'axios';
 // import $ from "jquery";
 // import TWEEN from "@tweenjs/tween.js";
-import UI from "./UI";
 import {$, math} from "./Util";
 // import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls.js';
 import { CSS3DObject, CSS3DRenderer } from 'three/examples/jsm/renderers/CSS3DRenderer.js';
@@ -99,7 +98,7 @@ export default class V3D {
     this.renderer.domElement.className = 'viewport';
     this.renderer.domElement.style.position = 'absolute';
 		this.renderer.domElement.style.top = "0";
-    this.$container.append(this.renderer.domElement);
+    this.$container[0].appendChild(this.renderer.domElement);
 
     window.addEventListener('resize', ()=>{
       this.camera.aspect = window.innerWidth / window.innerHeight;
@@ -174,8 +173,6 @@ export default class V3D {
     }
 
 
-
-    this.ui = UI.getInstance();
 
 
     ////////////////
