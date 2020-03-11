@@ -29,7 +29,7 @@ export default class V3D {
   // cameraTransform = null;
 
 
-
+  viewport = null;
   container = null;
   root = null;
   onUpdate = null;
@@ -114,16 +114,13 @@ export default class V3D {
     let el_root = document.createElement("div");
     el_root.className = "root_element";
     this.root = new CSS3DObject(el_root);
-
+    this.viewport = this.renderer.domElement;
 
     // this.root = new THREE.Group();
 
 
     // this.root = new THREE.Object3D();
     this.scene.add(this.root);
-
-    window['camera'] = this.camera;
-    window['root'] = this.root;
 
 
 
@@ -147,9 +144,7 @@ export default class V3D {
     }
 
     if(this.options.onUpdate){
-      this.onUpdate = time=>{
-        this.options.onUpdate(time);
-      }
+      this.onUpdate = this.options.onUpdate;
     }
 
 

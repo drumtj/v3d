@@ -13,6 +13,7 @@
       }
 
       .box {
+        position: relative;
         display: inline-block;
         width: 250px;
         height: 200px;
@@ -37,14 +38,55 @@
         <div class="box"></div>
         <div class="box"></div>
       </div>
+
+      <div id="target2" style="background-color:rgb(77, 207, 205)">
+        <div class="box"></div>
+        <div class="box"></div>
+        <div class="box"></div>
+        <div class="box"></div>
+        <div class="box"></div>
+      </div>
     </div>
-    <script type="text/javascript" src="https://unpkg.com/@drumtj/v3d@1.0.3/dist/v3d.js"></script>
+    <!-- <script type="text/javascript" src="https://unpkg.com/@drumtj/v3d@1.0.5/dist/v3d.js"></script> -->
+    <script type="text/javascript" src="./v3d.js"></script>
     <script type="text/javascript">
-      var v3d = new V3D(".container");
-      v3d.camera.rotation.z = V3D.math.degToRad(-10);
-      v3d.add("#target").position.z = 450;
-      v3d.onUpdate = function(time){
-        v3d.root.rotation.y = Math.cos(time/1000);
+
+      test1();
+      test2();
+
+      function test1(){
+        var v3d = new V3D(".container");
+        v3d.camera.rotation.z = V3D.math.degToRad(-10);
+        v3d.add("#target").position.z = 450;
+
+        var div = document.createElement("div");
+        div.className = "box";
+        div.innerHTML = "<h1>test</h1>";
+        v3d.add(div);
+
+        v3d.onUpdate = function(time){
+          v3d.root.rotation.y = Math.cos(time/1000);
+        }
+      }
+      function test2(){
+        var v3d = new V3D(".container", {
+          viewport:{
+            width: 400,
+            height: 400
+          },
+          camera:{
+            rotation:{
+              z: 10
+            }
+          },
+          onUpdate: function(time){
+            if(v3d){
+              v3d.root.rotation.y = Math.cos(time/1000);
+            }
+          }
+        });
+        v3d.add("#target2");
+        v3d.viewport.style.left = "50%";
       }
     </script>
   </body>

@@ -16,7 +16,7 @@ $ npm install @drumtj/v3d
 
 Using cdn:
 ```html
-<script src="https://unpkg.com/@drumtj/v3d@1.0.4/dist/v3d.js"></script>
+<script src="https://unpkg.com/@drumtj/v3d@1.0.5/dist/v3d.js"></script>
 ```
 
 CommonJS
@@ -162,6 +162,9 @@ v3d.container
 
 // Top-level object. Added as a child of v3d.root when v3d.add()
 v3d.root
+
+// viewport element.  v3d.renderer.domElement;
+v3d.viewport
 
 // math functions
 V3D.math.getDeg(x1, y1, x2, y2):number
