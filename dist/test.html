@@ -3,11 +3,10 @@
   <head>
     <meta charset="utf-8">
     <title></title>
-    <script type="text/javascript" src="./v3d.js"></script>
     <style media="screen">
-      .container {
-        width: 80vw;
-        height: 80vh;
+      #target {
+        width: 800px;
+        height: 600px;
         background-color: gray;
         overflow: auto;
         padding: 20px;
@@ -23,19 +22,30 @@
   </head>
   <body>
     <div class="container">
-      <div class="box"></div>
-      <div class="box"></div>
-      <div class="box"></div>
-      <div class="box"></div>
-      <div class="box"></div>
-      <div class="box"></div>
-      <div class="box"></div>
-      <div class="box"></div>
-      <div class="box"></div>
-      <div class="box"></div>
     </div>
+
+    <div class="temp" style="display:none;">
+      <div id="target">
+        <div class="box"></div>
+        <div class="box"></div>
+        <div class="box"></div>
+        <div class="box"></div>
+        <div class="box"></div>
+        <div class="box"></div>
+        <div class="box"></div>
+        <div class="box"></div>
+        <div class="box"></div>
+        <div class="box"></div>
+      </div>
+    </div>
+    <script type="text/javascript" src="https://unpkg.com/@drumtj/v3d@1.0.3/dist/v3d.js"></script>
     <script type="text/javascript">
       var v3d = new V3D(".container");
+      v3d.camera.rotation.z = V3D.math.degToRad(-10);
+      v3d.add("#target").position.z = 450;
+      v3d.onUpdate = function(time){
+        v3d.root.rotation.y = Math.cos(time/1000);
+      }
     </script>
   </body>
 </html>
