@@ -18,7 +18,7 @@ export default class V3D {
   prevTime = performance.now();
   time = 0;
   delta = 0;
-  ui = null;
+  // ui = null;
   scene:THREE.Scene = null;
   // clickRaycaster = null;
   camera:THREE.PerspectiveCamera = null;
@@ -30,7 +30,7 @@ export default class V3D {
 
 
 
-  $container = null;
+  container = null;
   root = null;
   onUpdate = null;
   //트윈상태 파악용
@@ -56,11 +56,6 @@ export default class V3D {
   }
 
   static instance;
-  // static create(data?, options?){
-  static create(param){
-    // this.instance = new BiscuitViewer(data, options);
-    this.instance = new V3D(param);
-  }
 
   static getInstance(selector?, opts?){
     if(!this.instance){
@@ -70,18 +65,24 @@ export default class V3D {
   }
 
 
-  async init(selector, opts?) {
-    this.$container = $(selector);
-    if(this.$container.length == 0){
+  init(selector, opts?) {
+    this.container = $(selector);
+    if(!this.container){
       throw "not found root";
     }
 
     this.options = Object.assign({
-      // default options
+      viewport: {
+        width: window.innerWidth,
+        height: window.innerHeight
+      }
     }, opts||{});
 
+    let width = this.options.viewport.width;
+    let height = this.options.viewport.height;
+
     this.scene = new THREE.Scene();
-    this.camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 1, 15000);
+    this.camera = new THREE.PerspectiveCamera(40, width / height, 1, 15000);
     this.camera.position.z = 1000;
 
     // this.scene.fog = new THREE.FogExp2( 0x001932, 0.00015 );
@@ -94,25 +95,26 @@ export default class V3D {
 
 
     this.renderer = new CSS3DRenderer();
-    this.renderer.setSize(window.innerWidth, window.innerHeight);
+    this.renderer.setSize(width, height);
     this.renderer.domElement.className = 'viewport';
     this.renderer.domElement.style.position = 'absolute';
 		this.renderer.domElement.style.top = "0";
-    this.$container[0].appendChild(this.renderer.domElement);
+    this.container.appendChild(this.renderer.domElement);
 
     window.addEventListener('resize', ()=>{
-      this.camera.aspect = window.innerWidth / window.innerHeight;
+      this.camera.aspect = width / height;
       this.camera.updateProjectionMatrix();
 
-      this.renderer.setSize(window.innerWidth, window.innerHeight);
+      this.renderer.setSize(width, height);
       // this.webGLRenderer.setPixelRatio( window.devicePixelRatio );
       // this.webGLRenderer.setSize( window.innerWidth, window.innerHeight );
     }, false);
 
 
     let el_root = document.createElement("div");
-    el_root.className = "root";
+    el_root.className = "root_element";
     this.root = new CSS3DObject(el_root);
+
 
     // this.root = new THREE.Group();
 
@@ -123,29 +125,7 @@ export default class V3D {
     window['camera'] = this.camera;
     window['root'] = this.root;
 
-    let target = this.options.target;
-    if(target && target.selector){
-      let list = this.add(target.selector);
-      if(list.length){
-        list.forEach(obj=>{
-          if(target.rotation){
-            for(let axis in target.rotation){
-              if(/^(x|y|z)$/.test(axis)){
-                obj.rotation[axis] = math.degToRad(target.rotation[axis]);
-              }
-            }
-          }
 
-          if(target.position){
-            for(let axis in target.position){
-              if(/^(x|y|z)$/.test(axis)){
-                obj.position[axis] = target.position[axis];
-              }
-            }
-          }
-        })
-      }
-    }
 
     let camera = this.options.camera;
     if(camera){
@@ -181,18 +161,36 @@ export default class V3D {
     this.animate();
   }
 
-  add(element){
-    let $el = $(element);
-    if($el.length){
-      return $el.map(el=>{
-        let obj = new CSS3DObject(el);
-        this.root.add(obj);
-        return obj;
-      })
-      // return obj;
-    }else{
-      return [];
+  add(selector, opts?){
+    let obj, element = $(selector);
+    if(element){
+      opts = opts || {};
+      // return list.map((el:any)=>{
+      obj = new CSS3DObject(element);
+
+      if(opts.name){
+        obj.name = opts.name;
+      }
+
+      if(opts.rotation){
+        for(let axis in opts.rotation){
+          if(/^(x|y|z)$/.test(axis)){
+            obj.rotation[axis] = math.degToRad(opts.rotation[axis]);
+          }
+        }
+      }
+
+      if(opts.position){
+        for(let axis in opts.position){
+          if(/^(x|y|z)$/.test(axis)){
+            obj.position[axis] = opts.position[axis];
+          }
+        }
+      }
+
+      this.root.add(obj);
     }
+    return obj;
   }
 
 
@@ -224,51 +222,6 @@ export default class V3D {
       return this.frustum.intersectsObject(objects.mesh);
     }
   }
-
-
-  delay(v){
-    return new Promise(resolve=>{
-      setTimeout(resolve, v);
-    })
-  }
-
-
-  normalRad(rad){
-    return Math.atan2(Math.sin(rad), Math.cos(rad));
-  }
-
-  // radToDeg(r){
-  //   return r/Math.PI*180;
-  // }
-
-  getDestinationRad(from, to){
-    // if(Math.abs(to - from) > Math.PI){
-    //   Math.PI*2 +
-    // }
-    // console.error("getDestinationRad", this.radToDeg(from), this.radToDeg(to));
-    if(Math.abs(to-from) > Math.PI){
-      if(to > 0){
-        // console.error(this.radToDeg(Math.PI*2 * to));
-        return from + (to-from) - Math.PI*2;
-        // return Math.PI*2 * to;
-      }else{
-        return from + (to-from) + Math.PI*2;
-        // console.error(this.radToDeg(Math.PI*2 - to));
-        // return Math.PI*2 - to;
-      }
-    }else{
-      return to;
-    }
-    // if(Math.abs(to-from)>Math.PI){
-    //   return from + Math.abs(to-from);
-    // }
-    // return to;
-  }
-
-  printDegree(rotation, memo?){
-    console.error("[printDegree]", memo, "xyz".split('').map(ax=>rotation[ax]/Math.PI*180));
-  }
-
 
 
 
@@ -367,7 +320,7 @@ export default class V3D {
     if (this.delta < 0.08){
       this.render();
       // TWEEN.update();
-      if(this.onUpdate){
+      if(typeof this.onUpdate === "function"){
         this.onUpdate(this.time);
       }
     }

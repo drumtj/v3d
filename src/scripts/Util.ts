@@ -1,6 +1,26 @@
 
-export function $(selector){
-  return Array.from(document.querySelectorAll(selector));
+export function $(selector):any{
+  if(typeof selector === "string"){
+    return document.querySelector(selector);
+  }else if(selector instanceof NodeList){
+    return selector[0];
+  }else if(selector instanceof HTMLElement || selector instanceof Node){
+    return selector;
+  }else{
+    return null;
+  }
+}
+
+export function $$(selector){
+  if(typeof selector === "string"){
+    return Array.from(document.querySelectorAll(selector));
+  }else if(selector instanceof NodeList){
+    return Array.from(selector);
+  }else if(selector instanceof HTMLElement){
+    return [selector];
+  }else{
+    return [];
+  }
 }
 
 // let isFullscreen;
@@ -261,6 +281,10 @@ export function blobToArrayBuffer(blob) {
   });
 }
 
+export function printDegree(rotation, memo?){
+  console.error("[printDegree]", memo, "xyz".split('').map(ax=>rotation[ax]/Math.PI*180));
+}
+
 export namespace math {
   export function getDeg(x1, y1, x2, y2){
     return Math.atan2(x2 - x1, y2 - y1) * 180 / Math.PI;
@@ -289,6 +313,17 @@ export namespace math {
   }
   export function randFloat(low, high){
     return Math.random() * (high-low) + low;
+  }
+  export function getDestinationRad(from, to){
+    if(Math.abs(to-from) > Math.PI){
+      if(to > 0){
+        return from + (to-from) - Math.PI*2;
+      }else{
+        return from + (to-from) + Math.PI*2;
+      }
+    }else{
+      return to;
+    }
   }
 }
 
