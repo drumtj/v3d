@@ -16,7 +16,7 @@ $ npm install @drumtj/v3d
 
 Using cdn:
 ```html
-<script src="https://unpkg.com/@drumtj/v3d@1.0.6/dist/v3d.js"></script>
+<script src="https://unpkg.com/@drumtj/v3d@1.0.7/dist/v3d.js"></script>
 ```
 
 CommonJS
@@ -32,6 +32,12 @@ const V3D = require('@drumtj/v3d');
 ```js
 // init full viewport size
 var v3d = new V3D(".container");
+```
+
+```js
+// init full viewport size
+var container = document.querySelector(".container");
+var v3d = new V3D(container);
 ```
 
 ```js
