@@ -16,7 +16,7 @@ $ npm install @drumtj/v3d
 
 Using cdn:
 ```html
-<script src="https://unpkg.com/@drumtj/v3d@1.0.5/dist/v3d.js"></script>
+<script src="https://unpkg.com/@drumtj/v3d@1.0.6/dist/v3d.js"></script>
 ```
 
 CommonJS
@@ -80,7 +80,7 @@ v3d.camera.rotation.z = V3D.math.degToRad(-10);
 // set onUpdate
 var v3d = new V3D(".container", {
   onUpdate: function(time){
-    v3d.root.rotation.y = Math.cos(time/1000);
+    if(v3d) v3d.root.rotation.y = Math.cos(time/1000);
   }
 });
 ```
@@ -89,7 +89,7 @@ var v3d = new V3D(".container", {
 // set onUpdate
 var v3d = new V3D(".container");
 v3d.onUpdate = function(time){
-  v3d.root.rotation.y = Math.cos(time/1000);
+  if(v3d) v3d.root.rotation.y = Math.cos(time/1000);
 }
 ```
 
