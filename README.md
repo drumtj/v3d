@@ -16,7 +16,7 @@ $ npm install @drumtj/v3d
 
 Using cdn:
 ```html
-<script src="https://unpkg.com/@drumtj/v3d@1.0.9/dist/v3d.js"></script>
+<script src="https://unpkg.com/@drumtj/v3d@1.0.10/dist/v3d.js"></script>
 ```
 
 CommonJS
@@ -186,7 +186,8 @@ V3D.math.getDestinationRad(fromRad:number, toRad:number):number;
 ```
 
 ## examples
-https://github.com/drumtj/v3d/blob/master/dist/test.html
+https://drumtj.github.io/v3d/test.html
+[source](https://github.com/drumtj/v3d/blob/master/examples/test.html)
 
 ## License
 
