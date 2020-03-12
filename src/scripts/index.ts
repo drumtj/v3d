@@ -72,17 +72,15 @@ export default class V3D {
     }
 
     this.options = Object.assign({
-      viewport: {
-        width: window.innerWidth,
-        height: window.innerHeight
-      }
+      // default option
     }, opts||{});
 
-    let width = this.options.viewport.width;
-    let height = this.options.viewport.height;
+
+
+    let viewport = this.getViewportSize();
 
     this.scene = new THREE.Scene();
-    this.camera = new THREE.PerspectiveCamera(40, width / height, 1, 15000);
+    this.camera = new THREE.PerspectiveCamera(40, viewport.width / viewport.height, 1, 15000);
     this.camera.position.z = 1000;
 
     // this.scene.fog = new THREE.FogExp2( 0x001932, 0.00015 );
@@ -95,17 +93,18 @@ export default class V3D {
 
 
     this.renderer = new CSS3DRenderer();
-    this.renderer.setSize(width, height);
+    this.renderer.setSize(viewport.width, viewport.height);
     this.renderer.domElement.className = 'viewport';
     this.renderer.domElement.style.position = 'absolute';
 		this.renderer.domElement.style.top = "0";
     this.container.appendChild(this.renderer.domElement);
 
     window.addEventListener('resize', ()=>{
-      this.camera.aspect = width / height;
+      let viewport = this.getViewportSize();
+      this.camera.aspect = viewport.width / viewport.height;
       this.camera.updateProjectionMatrix();
 
-      this.renderer.setSize(width, height);
+      this.renderer.setSize(viewport.width, viewport.height);
       // this.webGLRenderer.setPixelRatio( window.devicePixelRatio );
       // this.webGLRenderer.setSize( window.innerWidth, window.innerHeight );
     }, false);
@@ -154,6 +153,20 @@ export default class V3D {
     ////////////////
 
     this.animate();
+  }
+
+  getViewportSize(){
+    if(this.options.viewport){
+      return {
+        width: this.options.viewport.width,
+        height: this.options.viewport.height
+      }
+    }else{
+      return {
+        width: window.innerWidth,
+        height: window.innerHeight
+      }
+    }
   }
 
   add(selector, opts?){
