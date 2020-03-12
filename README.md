@@ -186,8 +186,7 @@ V3D.math.getDestinationRad(fromRad:number, toRad:number):number;
 ```
 
 ## examples
-https://drumtj.github.io/v3d/test.html
-[source](https://github.com/drumtj/v3d/blob/master/examples/test.html)
+https://drumtj.github.io/v3d/test.html ([source](https://github.com/drumtj/v3d/blob/master/examples/test.html))
 
 ## License
 
