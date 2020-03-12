@@ -16,7 +16,7 @@ $ npm install @drumtj/v3d
 
 Using cdn:
 ```html
-<script src="https://unpkg.com/@drumtj/v3d@1.0.8/dist/v3d.js"></script>
+<script src="https://unpkg.com/@drumtj/v3d@1.0.9/dist/v3d.js"></script>
 ```
 
 CommonJS
@@ -173,16 +173,16 @@ v3d.root
 v3d.viewport
 
 // math functions
-V3D.math.getDeg(x1, y1, x2, y2):number
-V3D.math.getRad(x1, y1, x2, y2):number
+V3D.math.getDeg(x1:number, y1:number, x2:number, y2:number):number
+V3D.math.getRad(x1:number, y1:number, x2:number, y2:number):number
 V3D.math.getCoord(angle:number, distance:number):{x:number, y:number}
 V3D.math.degToRad(degree:number):number
 V3D.math.radToDeg(radian:number):number
 V3D.math.distance(x1:number, y1:number, x2:number, y2:number):number
-V3D.math.normalRad(rad):number
-V3D.math.randInt(low, high):number
-V3D.math.randFloat(low, high):number
-V3D.math.getDestinationRad(fromRad, toRad):number;
+V3D.math.normalRad(rad:number):number
+V3D.math.randInt(low:number, high:number):number
+V3D.math.randFloat(low:number, high:number):number
+V3D.math.getDestinationRad(fromRad:number, toRad:number):number;
 ```
 
 ## examples
