@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ko" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <title></title>
+  <style media="screen">
+      .box {
+        position: relative;
+        display: inline-block;
+        width: 250px;
+        height: 200px;
+        border: 1px solid red;
+      }
+      .box:hover {
+        background-color: rgb(255, 198, 180);
+      }
+    </style>
+</head>
+
+<body>
+  <div class="container">
+  </div>
+  <!-- <script type="text/javascript" src="https://unpkg.com/@drumtj/v3d@1.0.32/dist/v3d.js"></script> -->
+  <script type="text/javascript" src="../dist/v3d.js"></script>
+  <script type="text/javascript">
+    var THREE = V3D.THREE;
+    var v3d = new V3D(".container");
+    var boxHtml = '<div class="box">';
+    var boxCount = 10;
+    var distance = 1400;
+    var angle = 120;
+
+    var angleUnit = -angle/boxCount;
+    var startAngle = (180 - angle) / 2;
+
+    //camera rotate speed
+    var mouseDistance = 1.5;
+    var mouse = new THREE.Vector3(0, 0, v3d.camera.position.z - mouseDistance);
+
+    for(var i=0; i<boxCount; i++){
+      var box = v3d.add(boxHtml);
+      var coord = V3D.math.getCoord(i*angleUnit-startAngle, distance);
+      box.position.x = v3d.camera.position.x + coord.x;
+      box.position.z = v3d.camera.position.z + coord.y;
+      box.lookAt(v3d.camera.position);
+    }
+
+    document.addEventListener("mousemove", function(event){
+      event.preventDefault();
+      mouse = v3d.getMouseVector(event, mouse);
+      mouse.y *= 0.2;
+      v3d.camera.lookAt(mouse);
+      v3d.render();
+    })
+  </script>
+</body>
+
+</html>

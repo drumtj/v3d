@@ -3,7 +3,7 @@
 [![npm version](https://img.shields.io/npm/v/@drumtj/v3d.svg?style=flat)](https://www.npmjs.com/package/@drumtj/v3d)
 [![license](https://img.shields.io/npm/l/@drumtj/v3d.svg)](#)
 
-make a simple 3d view
+make a simple 3d view (CSS3D based using threejs)
 
 
 ## Installing
@@ -16,7 +16,7 @@ $ npm install @drumtj/v3d
 
 Using cdn:
 ```html
-<script src="https://unpkg.com/@drumtj/v3d@1.0.12/dist/v3d.js"></script>
+<script src="https://unpkg.com/@drumtj/v3d@1.0.13/dist/v3d.js"></script>
 ```
 
 CommonJS
@@ -122,6 +122,12 @@ v3d.render();
 ```
 
 ```js
+// add element by html string
+v3d.add('<div class="box">');
+v3d.render();
+```
+
+```js
 // add element with attribute
 v3d.add("#target", {
   rotation: {
@@ -160,9 +166,10 @@ var object3 = v3d.scene.getObjectById(4, true);
 ```
 
 
-
-
 ```js
+// three js ref
+V3D.THREE
+
 // https://threejs.org/docs/#api/en/scenes/Scene
 v3d.scene
 
@@ -194,16 +201,71 @@ V3D.math.randFloat(low:number, high:number):number
 V3D.math.getDestinationRad(fromRad:number, toRad:number):number;
 
 
+
+
 //////// member method////////
 render() // once
 startAnimate() // render loop
 stopAnimate()
 add(selector:string|HTMLElement):CSS3DObject
 checkInCamera(object:CSS3DObject|CSS3DObject[]): boolean|boolean[]
+getMouseVector(event:MouseEvent, refVector?:THREE.Vector3):THREE.Vector3
+```
+
+```js
+// full example-1
+var v3d = new V3D(".container");
+v3d.add("#target", {
+  rotation: {
+    x: -10,
+    y: -10
+  }
+});
+v3d.render();
+```
+
+```js
+// full example-2
+var v3d = new V3D(".container", {
+  camera: {
+    rotation: {
+      x: -30
+    },
+    position: {
+      y: 500
+    }
+  }
+});
+v3d.add("#target", {
+  position: {
+    z: 200
+  }
+});
+v3d.render();
+```
+
+```js
+// full example-3
+var v3d = new V3D(".container");
+var box = v3d.add('<div class="box">');
+box.element.contentEditable = true;
+box.element.textContent = "hi~";
+
+document.addEventListener("mousemove", function(event){
+  event.preventDefault();
+  // var x = (event.clientX / window.innerWidth) * 2 - 1;
+  // var y = -(event.clientY / window.innerHeight) * 2 + 1;
+  // box.lookAt(x, y, 0.5);
+
+  box.lookAt(v3d.getMouseVector(event));
+  v3d.render();
+})
 ```
 
 ## examples
 https://drumtj.github.io/v3d/test.html ([source](https://github.com/drumtj/v3d/blob/master/examples/test.html))
+https://drumtj.github.io/v3d/test2.html ([source](https://github.com/drumtj/v3d/blob/master/examples/test2.html))
+https://drumtj.github.io/v3d/test3.html ([source](https://github.com/drumtj/v3d/blob/master/examples/test3.html))
 
 ## License
 

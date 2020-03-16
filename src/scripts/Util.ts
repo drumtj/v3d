@@ -1,7 +1,25 @@
 
+const domParser = new DOMParser();
+export function renderHtml(html){
+  let child
+  try{
+    let body = domParser.parseFromString(html, "text/html").body;
+    child = body.firstChild;
+    body.innerHTML = '';
+  }catch(e){
+    console.error(e);
+  }
+  return child;
+}
+
 export function $(selector):any{
   if(typeof selector === "string"){
-    return document.querySelector(selector);
+    selector = selector.trim();
+    if(selector.charAt(0) == '<'){
+      return renderHtml(selector);
+    }else{
+      return document.querySelector(selector);
+    }
   }else if(selector instanceof NodeList){
     return selector[0];
   }else if(selector instanceof HTMLElement || selector instanceof Node){

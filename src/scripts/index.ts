@@ -51,6 +51,7 @@ export default class V3D {
   allowAnimate;
 
   static math = math;
+  static THREE = THREE;
 
   constructor(selector, opts?) {
     this.init(selector, opts);
@@ -156,6 +157,16 @@ export default class V3D {
     this.render();
   }
 
+  getMouseVector(event, vector?){
+    let rect = this.renderer.domElement.getBoundingClientRect();
+    vector = vector || new THREE.Vector3(0, 0, 0.5);
+    return vector.set(
+      ( ( event.clientX - rect.left ) / rect.width ) * 2 - 1,
+      - ( ( event.clientY - rect.top ) / rect.height ) * 2 + 1,
+      vector.z
+    )
+  }
+
   getViewportSize(){
     if(this.options.viewport){
       return {
@@ -169,6 +180,8 @@ export default class V3D {
       }
     }
   }
+
+
 
   add(selector, opts?){
     let obj, element = $(selector);
