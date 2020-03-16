@@ -16,7 +16,7 @@ $ npm install @drumtj/v3d
 
 Using cdn:
 ```html
-<script src="https://unpkg.com/@drumtj/v3d@1.0.13/dist/v3d.js"></script>
+<script src="https://unpkg.com/@drumtj/v3d@1.0.14/dist/v3d.js"></script>
 ```
 
 CommonJS
@@ -246,6 +246,22 @@ v3d.render();
 
 ```js
 // full example-3
+var container = document.querySelector(".container");
+var v3d = new V3D(container);
+v3d.camera.rotation.z = V3D.math.degToRad(-10);
+v3d.add("#target").position.z = 450;
+
+var div = document.createElement("div");
+v3d.add(div);
+
+v3d.onUpdate = function(time) {
+  if(v3d) v3d.root.rotation.y = Math.cos(time / 1000);
+}
+v3d.startAnimate();
+```
+
+```js
+// full example-4
 var v3d = new V3D(".container");
 var box = v3d.add('<div class="box">');
 box.element.contentEditable = true;
@@ -258,6 +274,39 @@ document.addEventListener("mousemove", function(event){
   // box.lookAt(x, y, 0.5);
 
   box.lookAt(v3d.getMouseVector(event));
+  v3d.render();
+})
+```
+
+```js
+// full example-5
+var THREE = V3D.THREE;
+var v3d = new V3D(".container");
+var boxHtml = '<div class="box">';
+var boxCount = 10;
+var distance = 1400;
+var angle = 120;
+
+var angleUnit = -angle/boxCount;
+var startAngle = (180 - angle) / 2;
+
+//camera rotate speed
+var mouseDistance = 1.5;
+var mouse = new THREE.Vector3(0, 0, v3d.camera.position.z - mouseDistance);
+
+for(var i=0; i<boxCount; i++){
+  var box = v3d.add(boxHtml);
+  var coord = V3D.math.getCoord(i*angleUnit-startAngle, distance);
+  box.position.x = v3d.camera.position.x + coord.x;
+  box.position.z = v3d.camera.position.z + coord.y;
+  box.lookAt(v3d.camera.position);
+}
+
+document.addEventListener("mousemove", function(event){
+  event.preventDefault();
+  mouse = v3d.getMouseVector(event, mouse);
+  mouse.y *= 0.2;
+  v3d.camera.lookAt(mouse);
   v3d.render();
 })
 ```
