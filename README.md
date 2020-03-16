@@ -16,7 +16,7 @@ $ npm install @drumtj/v3d
 
 Using cdn:
 ```html
-<script src="https://unpkg.com/@drumtj/v3d@1.0.14/dist/v3d.js"></script>
+<script src="https://unpkg.com/@drumtj/v3d@1.0.15/dist/v3d.js"></script>
 ```
 
 CommonJS
@@ -312,9 +312,9 @@ document.addEventListener("mousemove", function(event){
 ```
 
 ## examples
-https://drumtj.github.io/v3d/test.html ([source](https://github.com/drumtj/v3d/blob/master/examples/test.html))
-https://drumtj.github.io/v3d/test2.html ([source](https://github.com/drumtj/v3d/blob/master/examples/test2.html))
-https://drumtj.github.io/v3d/test3.html ([source](https://github.com/drumtj/v3d/blob/master/examples/test3.html))
+- https://drumtj.github.io/v3d/test.html ([source](https://github.com/drumtj/v3d/blob/master/examples/test.html))
+- https://drumtj.github.io/v3d/test2.html ([source](https://github.com/drumtj/v3d/blob/master/examples/test2.html))
+- https://drumtj.github.io/v3d/test3.html ([source](https://github.com/drumtj/v3d/blob/master/examples/test3.html))
 
 ## License
 
