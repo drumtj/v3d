@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ko" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <title></title>
+  <style media="screen">
+      .box {
+        position: relative;
+        display: inline-block;
+        width: 250px;
+        height: 200px;
+        border: 1px solid red;
+      }
+    </style>
+</head>
+
+<body>
+  <div class="container">
+  </div>
+  <!-- <script type="text/javascript" src="https://unpkg.com/@drumtj/v3d@1.0.13/dist/v3d.js"></script> -->
+  <script type="text/javascript" src="../dist/v3d.js"></script>
+  <script type="text/javascript">
+  var v3d = new V3D(".container");
+  var box = v3d.add('<div class="box">');
+  var mouse;
+  box.element.contentEditable = true;
+  box.element.textContent = "hi~";
+
+  document.addEventListener("mousemove", function(event){
+    event.preventDefault();
+    // var x = (event.clientX / window.innerWidth) * 2 - 1;
+    // var y = -(event.clientY / window.innerHeight) * 2 + 1;
+    // box.lookAt(x, y, 0.5);
+
+    //for reuse
+    mouse = v3d.getMouseVector(event, mouse);
+    box.lookAt(mouse);
+
+    v3d.render();
+  })
+  </script>
+</body>
+
+</html>
