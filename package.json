@@ -7,6 +7,7 @@
     "start": "webpack-dev-server",
     "build": "webpack -p --mode=production --optimize-minimize",
     "release": "npm run build && npm run deploy && np --no-cleanup --yolo --no-release-draft",
+    "release_with_page": "npm run build && npm run deploy_with_page && np --no-cleanup --yolo --no-release-draft",
     "_release": "npm run build && npm run deploy",
     "deploy": "git add -A && git commit -m 'deploy' && git push origin master",
     "push_page": "git subtree push --prefix examples origin gh-pages",

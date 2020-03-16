@@ -16,7 +16,7 @@ $ npm install @drumtj/v3d
 
 Using cdn:
 ```html
-<script src="https://unpkg.com/@drumtj/v3d@1.0.10/dist/v3d.js"></script>
+<script src="https://unpkg.com/@drumtj/v3d@1.0.12/dist/v3d.js"></script>
 ```
 
 CommonJS
@@ -97,6 +97,7 @@ var v3d = new V3D(".container");
 v3d.onUpdate = function(time){
   if(v3d) v3d.root.rotation.y = Math.cos(time/1000);
 }
+v3d.startAnimate();
 ```
 
 ```js
@@ -104,17 +105,20 @@ v3d.onUpdate = function(time){
 let img = new Image();
 img.src = "https://lh3.googleusercontent.com/proxy/8HGxCTGmkoShDUA0NhfJebwJ9xuHxlWV1Qg1cTNemgAoVHC5ph6Zua7F4aoCZts9aWoWE9m4N3kmq4YoykXhVSDv0Eo61qYzXf1Rv91TEkDtcA";
 v3d.add(img);
+v3d.render();
 ```
 
 ```js
 // add element
 let target = document.getElementById("target");
 v3d.add(target);
+v3d.render();
 ```
 
 ```js
 // add element by css selector
 v3d.add("#target");
+v3d.render();
 ```
 
 ```js
@@ -124,17 +128,20 @@ v3d.add("#target", {
     x: -10
   }
 });
+v3d.render();
 ```
 
 ```js
 // get 3d Object for control
 let obj = v3d.add("#target");
 obj.rotation.x = V3D.math.degToRad(-10);
+v3d.render();
 ```
 
 ```js
 // set object name to find
 v3d.add("#target", {name:"test"});
+v3d.render();
 ```
 
 ```js
@@ -151,6 +158,8 @@ var object2 = v3d.scene.getObjectByName("objectName", true);
 
 var object3 = v3d.scene.getObjectById(4, true);
 ```
+
+
 
 
 ```js
@@ -183,6 +192,14 @@ V3D.math.normalRad(rad:number):number
 V3D.math.randInt(low:number, high:number):number
 V3D.math.randFloat(low:number, high:number):number
 V3D.math.getDestinationRad(fromRad:number, toRad:number):number;
+
+
+//////// member method////////
+render() // once
+startAnimate() // render loop
+stopAnimate()
+add(selector:string|HTMLElement):CSS3DObject
+checkInCamera(object:CSS3DObject|CSS3DObject[]): boolean|boolean[]
 ```
 
 ## examples

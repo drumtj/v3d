@@ -48,6 +48,7 @@ export default class V3D {
   // }
 
   options;
+  allowAnimate;
 
   static math = math;
 
@@ -55,14 +56,14 @@ export default class V3D {
     this.init(selector, opts);
   }
 
-  static instance;
-
-  static getInstance(selector?, opts?){
-    if(!this.instance){
-      this.instance = new V3D(selector, opts);
-    }
-    return this.instance;
-  }
+  // static instance;
+  //
+  // static getInstance(selector?, opts?){
+  //   if(!this.instance){
+  //     this.instance = new V3D(selector, opts);
+  //   }
+  //   return this.instance;
+  // }
 
 
   init(selector, opts?) {
@@ -152,7 +153,7 @@ export default class V3D {
     ////////////////
     ////////////////
 
-    this.animate();
+    this.render();
   }
 
   getViewportSize(){
@@ -321,6 +322,9 @@ export default class V3D {
 
 
   animate = ()=>{
+    if(!this.allowAnimate){
+      return;
+    }
     requestAnimationFrame(this.animate);
     this.time = performance.now();
     this.delta = (this.time - this.prevTime) / 1000;
@@ -334,7 +338,14 @@ export default class V3D {
     }
   }
 
+  stopAnimate(){
+    this.allowAnimate = false;
+  }
 
+  startAnimate(){
+    this.allowAnimate = true;
+    this.animate();
+  }
 
   render() {
     this.renderer.render(this.scene, this.camera);
