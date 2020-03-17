@@ -21,7 +21,8 @@ function test(){
 function test_cameraMovePlugin(){
   var THREE = V3D.THREE;
   var v3d = new V3D(".container");
-  var boxHtml = '<div class="box">';
+  window['v3d'] = v3d;
+  var boxHtml = '<div class="box" style="text-align:center;"><h1 style="pointer-events:none;">click me</h1></div>';
   var boxCount = 10;
   var distance = 1400;
   var angle = 120;

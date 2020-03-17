@@ -83,7 +83,7 @@ export default class V3D {
     let viewport = this.getViewportSize();
 
     this.scene = new THREE.Scene();
-    this.camera = new THREE.PerspectiveCamera(40, viewport.width / viewport.height, 1, 15000);
+    this.camera = new THREE.PerspectiveCamera(40, viewport.width / viewport.height, 1, 1000);
     this.camera.position.z = 1000;
 
     // this.scene.fog = new THREE.FogExp2( 0x001932, 0.00015 );
