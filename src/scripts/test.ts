@@ -1,21 +1,26 @@
 import V3D from "./index";
 import CameraMovePlugin from "./plugins/CameraMovePlugin";
 
-test_cameraMovePlugin();
+test();
 
 function test(){
   var v3d = new V3D(".container");
-  v3d.startAnimate();
-  var box1 = v3d.add('<div class="box">');
-  v3d.tween(v3d.camera, box1, 2000, {
-    lookAtDistance: 400
-    //offsetPosition: THREE.Vector3|{x?:number;y?:number;z?:number};
-    //withPosition?: boolean;
-    //withRotation?: boolean;
-    //rotationDelay?: number;
-    //onComplete?: ()=>void;
-    //easing?: any;
-  });
+  var box = v3d.add('<div class="box">');
+  var mouse;
+  box.element.contentEditable = true;
+  box.element.textContent = "hi~";
+
+  document.addEventListener("mousemove", function(event){
+    event.preventDefault();
+    // var x = (event.clientX / window.innerWidth) * 2 - 1;
+    // var y = -(event.clientY / window.innerHeight) * 2 + 1;
+    // box.lookAt(x, y, 0.5);
+
+    mouse = v3d.getMouseVector(event, mouse);
+    box.lookAt(mouse);
+
+    v3d.render();
+  })
 }
 
 function test_cameraMovePlugin(){
