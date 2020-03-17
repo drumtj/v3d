@@ -386,21 +386,21 @@ export default class V3D {
 
   animateCallback = null;
   animate = ()=>{
-    if(!this.allowAnimate){
-      return;
-    }
-    if(this.animateCallback){
-      requestAnimationFrame(this.animateCallback);
-    }
+    // if(!this.allowAnimate){
+    //   return;
+    // }
+    // if(this.animateCallback){
+    //   requestAnimationFrame(this.animateCallback);
+    // }
     this.time = performance.now();
     this.delta = (this.time - this.prevTime) / 1000;
     this.prevTime = this.time;
     if (this.delta < 0.08){
-      this.render();
-      TWEEN.update();
       if(typeof this.onUpdate === "function"){
         this.onUpdate(this.time);
       }
+      TWEEN.update();
+      this.render();
     }
   }
 
@@ -410,9 +410,18 @@ export default class V3D {
   }
 
   startAnimate(){
+    this.stopAnimate();
     this.allowAnimate = true;
-    this.animateCallback = this.animate;
-    this.animate();
+    let cb = ()=>{
+      if(this.animateCallback === cb){
+        requestAnimationFrame(cb);
+      }else{
+        return;
+      }
+      this.animate();
+    }
+    this.animateCallback = cb;
+    cb();
   }
 
   render() {
