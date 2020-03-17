@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ko" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <title></title>
+  <style media="screen">
+      .box {
+        position: relative;
+        display: inline-block;
+        width: 250px;
+        height: 200px;
+        border: 1px solid red;
+        text-align:center;
+      }
+      .box:hover {
+        background-color: rgb(255, 198, 180);
+      }
+    </style>
+</head>
+
+<body>
+  <div class="container">
+  </div>
+  <script type="text/javascript" src="https://unpkg.com/@drumtj/v3d@1.0.20/dist/v3d.js"></script>
+  <script type="text/javascript" src="https://unpkg.com/@drumtj/v3d@1.0.20/dist/cameraMovePlugin.js"></script>
+  <!-- <script type="text/javascript" src="../dist/v3d.js"></script> -->
+  <!-- <script type="text/javascript" src="../dist/cameraMovePlugin.js"></script> -->
+  <script type="text/javascript">
+    var THREE = V3D.THREE;
+    var v3d = new V3D(".container");
+    var boxHtml = '<div class="box"><h1 style="pointer-events:none">click me</h1></div>';
+    var boxCount = 10;
+    var distance = 1400;
+    var tweenDuration = 1000;
+    var lookAtDistance = 400;
+
+    var cameraMovePlugin = new CameraMovePlugin(v3d, {
+      tweenDuration: tweenDuration,
+      lookAtDistance: lookAtDistance
+    })
+
+
+    //camera rotate speed
+    var mouseDistance = 1.5;
+    var mouse = new THREE.Vector3(0, 0, v3d.camera.position.z - mouseDistance);
+
+    var boxs = [];
+    function calcUnitAngle(i, angle){
+      return i * (-angle/boxCount) - ((180 - angle) / 2);
+    }
+
+    var transformModelInfo = {
+      "v-cylinder": {
+        angle: 120
+      },
+      "h-cylinder": {
+        angle: 90
+      },
+    }
+
+    var transformModel = {
+      "v-cylinder": [],
+      "h-cylinder": [],
+    };
+
+    var transformType;
+    var obj, coord, type;
+    var mouseLock = false;
+    for(var i=0; i<boxCount; i++){
+      var box = v3d.add(boxHtml);
+      box.position.set(
+        V3D.math.randFloat(-700, 700),
+        V3D.math.randFloat(-700, 700),
+        V3D.math.randFloat(1000, 1500)
+      );
+      boxs.push(box);
+    }
+
+    type = 'v-cylinder';
+    for(var i=0; i<boxCount; i++){
+      obj = new THREE.Object3D();
+      coord = V3D.math.getCoord(calcUnitAngle(i, transformModelInfo[type].angle), distance);
+      obj.position.x = v3d.camera.position.x + coord.x;
+      obj.position.z = v3d.camera.position.z + coord.y;
+      obj.lookAt(v3d.camera.position);
+      transformModel[type].push(obj);
+    }
+
+    type = 'h-cylinder';
+    for(var i=0; i<boxCount; i++){
+      obj = new THREE.Object3D();
+      coord = V3D.math.getCoord(calcUnitAngle(i, transformModelInfo[type].angle), distance);
+      obj.position.y = v3d.camera.position.y + coord.x;
+      obj.position.z = v3d.camera.position.z + coord.y;
+      obj.lookAt(v3d.camera.position);
+      transformModel[type].push(obj);
+    }
+
+    v3d.startAnimate();
+
+    changeTransform('v-cylinder');
+
+    function changeTransform(type){
+      mouseLock = true;
+      if(transformModel[type] && transformType !== type){
+        cameraMovePlugin.moveHome(500).then(()=>{
+          transformType = type;
+          var onComplete;
+          for(var i=0; i<boxs.length; i++){
+            if(i==boxs.length-1){
+              onComplete = function(){
+                mouseLock = false;
+              }
+            }
+
+            v3d.tween(boxs[i], transformModel[transformType][i], 500, {
+              delay: i * 50,
+              onComplete: onComplete
+            })
+          }
+        })
+      }
+    }
+
+
+
+
+
+    var btnContainer = document.createElement("div");
+    btnContainer.style.cssText = "position:absolute;left:50%;bottom:10px";
+    document.body.appendChild(btnContainer);
+
+    var homeBtn = document.createElement("button");
+    homeBtn.className = "home";
+    homeBtn.textContent = "HOME";
+    btnContainer.appendChild(homeBtn);
+
+    var hCylinderBtn = document.createElement("button");
+    hCylinderBtn.textContent = "h-cylinder";
+    btnContainer.appendChild(hCylinderBtn);
+    hCylinderBtn.addEventListener("click", function(event){
+      changeTransform('h-cylinder');
+    })
+
+    var vCylinderBtn = document.createElement("button");
+    vCylinderBtn.textContent = "v-cylinder";
+    btnContainer.appendChild(vCylinderBtn);
+    vCylinderBtn.addEventListener("click", function(event){
+      changeTransform('v-cylinder');
+    })
+
+    document.addEventListener("click", function(event){
+      if(event.target.classList.contains("box")){
+        cameraMovePlugin.moveTarget(event.target);
+      }else if(event.target.classList.contains("home")){
+        cameraMovePlugin.moveHome();
+      }
+    })
+
+    document.addEventListener("mousemove", function(event){
+      event.preventDefault();
+      if(!mouseLock && cameraMovePlugin.state == "home"){
+        v3d.getMouseVector(event, mouse);
+        if(transformType == "h-cylinder"){
+          mouse.x = 0;
+        }else if(transformType == "v-cylinder"){
+          mouse.y = 0;
+        }
+        v3d.camera.lookAt(mouse);
+      }
+    })
+  </script>
+</body>
+
+</html>

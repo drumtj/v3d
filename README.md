@@ -16,7 +16,7 @@ $ npm install @drumtj/v3d
 
 Using cdn:
 ```html
-<script src="https://unpkg.com/@drumtj/v3d@1.0.19/dist/v3d.js"></script>
+<script src="https://unpkg.com/@drumtj/v3d@1.0.20/dist/v3d.js"></script>
 ```
 
 CommonJS
@@ -373,6 +373,7 @@ document.addEventListener("mousemove", function(event){
 - [mouse pointer lookup](https://drumtj.github.io/v3d/test2.html) ([source](https://github.com/drumtj/v3d/blob/master/examples/test2.html))
 - [dynamic element insertion](https://drumtj.github.io/v3d/test3.html) ([source](https://github.com/drumtj/v3d/blob/master/examples/test3.html))
 - [use camera move plugin](https://drumtj.github.io/v3d/test4.html) ([source](https://github.com/drumtj/v3d/blob/master/examples/test4.html))
+- [make a transform model](https://drumtj.github.io/v3d/test5.html) ([source](https://github.com/drumtj/v3d/blob/master/examples/test5.html))
 
 ## License
 

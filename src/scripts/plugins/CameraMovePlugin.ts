@@ -19,11 +19,12 @@ export default class CameraMovePlugin {
     this.v3d = v3d;
   }
 
-  moveTarget(target){
+  moveTarget(target, duration?){
     return new Promise(resolve=>{
+      duration = typeof duration === "number" ? duration : this.option.tweenDuration;
       this._state = "move";
       this.v3d.killTween(this.tweens);
-      this.tweens = this.v3d.tween(this.v3d.camera, target, this.option.tweenDuration, {
+      this.tweens = this.v3d.tween(this.v3d.camera, target, duration, {
         lookAtDistance: this.option.lookAtDistance,
         onComplete: ()=>{
           this._state = "target";
@@ -33,11 +34,12 @@ export default class CameraMovePlugin {
     })
   }
 
-  moveHome(){
+  moveHome(duration?){
     return new Promise(resolve=>{
+      duration = typeof duration === "number" ? duration : this.option.tweenDuration;
       this._state = "move";
       this.v3d.killTween(this.tweens);
-      this.tweens = this.v3d.tween(this.v3d.camera, this.homeObject, this.option.tweenDuration, {
+      this.tweens = this.v3d.tween(this.v3d.camera, this.homeObject, duration, {
         onComplete: ()=>{
           this._state = "home";
           resolve();
