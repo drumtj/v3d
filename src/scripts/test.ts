@@ -1,72 +1,79 @@
 import V3D from "./index";
+import CameraMovePlugin from "./plugins/CameraMovePlugin";
 
-let list = [
-  function(){
-    let img = new Image();
-    img.src = "https://lh3.googleusercontent.com/proxy/8HGxCTGmkoShDUA0NhfJebwJ9xuHxlWV1Qg1cTNemgAoVHC5ph6Zua7F4aoCZts9aWoWE9m4N3kmq4YoykXhVSDv0Eo61qYzXf1Rv91TEkDtcA"
+test_cameraMovePlugin();
 
-    var v3d = new V3D(".container");
-    let imgObj = v3d.add(img);
-    imgObj.rotation.x = V3D.math.degToRad(-10);
-  },
-  function(){
-    let element = document.querySelector(".target1");
+function test(){
+  var v3d = new V3D(".container");
+  v3d.startAnimate();
+  var box1 = v3d.add('<div class="box">');
+  v3d.tween(v3d.camera, box1, 2000, {
+    lookAtDistance: 400
+    //offsetPosition: THREE.Vector3|{x?:number;y?:number;z?:number};
+    //withPosition?: boolean;
+    //withRotation?: boolean;
+    //rotationDelay?: number;
+    //onComplete?: ()=>void;
+    //easing?: any;
+  });
+}
 
-    var v3d = new V3D(".container");
-    v3d.add(element, {
-      rotation:{
-        x: -10
-      }
-    });
-  },
-  function(){
-    var v3d = new V3D(".container", {camera:{rotation:{z:-15}}});
-    v3d.add(".target1", {
-      rotation:{
-        x: -10
-      },
-      position:{
-        z: 500
-      }
-    });
-    v3d.onUpdate = function(time){
-      v3d.root.rotation.y = Math.cos(time/1000);
-    }
-  },
-  function(){
-    var v3d = new V3D(".container", {
-      viewport: {
-        width: 800,
-        height: 600
-      },
-      camera: {
-        position: {
-          z: 1000
-        }
-      }
-    });
+function test_cameraMovePlugin(){
+  var THREE = V3D.THREE;
+  var v3d = new V3D(".container");
+  var boxHtml = '<div class="box">';
+  var boxCount = 10;
+  var distance = 1400;
+  var angle = 120;
+  var tweenDuration = 1000;
+  var lookAtDistance = 400;
 
-    let img = new Image();
-    img.src = "https://lh3.googleusercontent.com/proxy/8HGxCTGmkoShDUA0NhfJebwJ9xuHxlWV1Qg1cTNemgAoVHC5ph6Zua7F4aoCZts9aWoWE9m4N3kmq4YoykXhVSDv0Eo61qYzXf1Rv91TEkDtcA"
-    v3d.add(img, {
-      rotation:{
-        x: -10
-      }
-    })
+  var angleUnit = -angle/boxCount;
+  var startAngle = (180 - angle) / 2;
+
+  //camera rotate speed
+  var mouseDistance = 1.5;
+  var mouse = new THREE.Vector3(0, 0, v3d.camera.position.z - mouseDistance);
+
+  // window['v3d'] = v3d;
+
+  for(var i=0; i<boxCount; i++){
+    var box = v3d.add(boxHtml);
+    var coord = V3D.math.getCoord(i*angleUnit-startAngle, distance);
+    box.position.x = v3d.camera.position.x + coord.x;
+    box.position.z = v3d.camera.position.z + coord.y;
+    box.lookAt(v3d.camera.position);
   }
-];
-
-list[2]();
-
-// v3d.scene.getObjectByName
-// v3d.scene.getObjectById
-// v3d.add(document.querySelector(".container"), {
-//   rotation:{
-//     x: -10
-//   }
-// })
+  // v3d.render();
+  v3d.startAnimate();
 
 
-// var v3d = new V3D(".root");
-// let t = v3d.add(".container").forEach(v=>v.rotation.x=-3);
-// console.error(t);
+
+  var cameraMovePlugin = new CameraMovePlugin(v3d, {
+    tweenDuration: tweenDuration,
+    lookAtDistance: lookAtDistance
+  })
+
+  var homeBtn = document.createElement("button");
+  homeBtn.className = "home";
+  homeBtn.textContent = "HOME";
+  homeBtn.style.cssText = "position:absolute;left:50%;bottom:10px";
+  document.body.appendChild(homeBtn);
+
+  document.addEventListener("click", function(event:any){
+    if(event.target.classList.contains("box")){
+      cameraMovePlugin.moveTarget(event.target);
+    }else if(event.target.classList.contains("home")){
+      cameraMovePlugin.moveHome();
+    }
+  })
+
+  document.addEventListener("mousemove", function(event){
+    event.preventDefault();
+    if(cameraMovePlugin.state == "home"){
+      v3d.getMouseVector(event, mouse);
+      mouse.y = 0;
+      v3d.camera.lookAt(mouse);
+    }
+  })
+}

@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 // import axios from 'axios';
 // import $ from "jquery";
-// import TWEEN from "@tweenjs/tween.js";
+import TWEEN from "@tweenjs/tween.js";
 import {$, math} from "./Util";
 // import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls.js';
 import { CSS3DObject, CSS3DRenderer } from 'three/examples/jsm/renderers/CSS3DRenderer.js';
@@ -40,18 +40,19 @@ export default class V3D {
   // cameraTweens = [];
   // transformTweens = [];
   // 트윈 기본옵션
-  // tweenDefOpt = {
-  //   withPosition: true,
-  //   withRotation: true,
-  //   delay: 0,
-  //   easing: TWEEN.Easing.Exponential.InOut
-  // }
+  tweenDefOpt = {
+    withPosition: true,
+    withRotation: true,
+    delay: 0,
+    easing: TWEEN.Easing.Sinusoidal.InOut
+  }
 
   options;
   allowAnimate;
 
   static math = math;
   static THREE = THREE;
+  static TWEEN = TWEEN;
 
   constructor(selector, opts?) {
     this.init(selector, opts);
@@ -189,6 +190,7 @@ export default class V3D {
       opts = opts || {};
       // return list.map((el:any)=>{
       obj = new CSS3DObject(element);
+      obj.element.dataset.id = obj.id;
 
       if(opts.name){
         obj.name = opts.name;
@@ -246,82 +248,131 @@ export default class V3D {
   }
 
 
+  cloneEmptyObject(object){
+    let obj = new THREE.Object3D();
+    obj.position.copy(object.position);
+    obj.rotation.copy(object.rotation);
+    return obj;
+  }
 
-  // tween(object, target, duration=2000, option?:{
-  //   withPosition?: boolean;
-  //   withRotation?: boolean;
-  //   delay?: number;
-  //   rotationDelay?: number;
-  //   onComplete?: ()=>void;
-  //   easing?: any;
-  // }):any[]{
-  //   // if(!object || !target){
-  //   //   // console.error("tween param error", object, target);
-  //   //   return [];
-  //   // }
-  //   // console.error("tween", object, target);
-  //   let opt = Object.assign({}, this.tweenDefOpt, option);
-  //   let tws = [];
-  //   let tw, promises = [];
-  //   if(object && target && opt.withPosition){
-  //     promises.push(new Promise(resolve=>{
-  //       tw = new TWEEN.Tween( object.position )
-  //       .to( { x: target.position.x, y: target.position.y, z: target.position.z }, duration )
-  //       // .interpolation( TWEEN.Interpolation.Bezier )
-  //       .delay(opt.delay||0)
-  //       .onComplete(resolve)
-  //       .easing( opt.easing );
-  //       // if(opt.delay > 0){
-  //       //   tw.delay(opt.delay);
-  //       // }
-  //       tws.push(tw);
-  //     }))
-  //   }
-  //
-  //   if(object && target && opt.withRotation){
-  //     promises.push(new Promise(resolve=>{
-  //       let rotation = ["x","y","z"].reduce((r,ax)=>{
-  //         //출발점 rotation 노멀라이징.
-  //         object.rotation[ax] = this.normalRad(object.rotation[ax]);
-  //         //목적 회전값과의 거리를 최단회전거리로 변경
-  //         r[ax] = this.getDestinationRad(object.rotation[ax], this.normalRad(target.rotation[ax]));
-  //         return r;
-  //       }, {})
-  //       // console.error("rotationDelay", opt.rotationDelay, object);
-  //       // if(object instanceof THREE.PerspectiveCamera && this.selectedBiscuit == null){
-  //       //   console.error("rotation", rotation);
-  //       // }
-  //       tw = new TWEEN.Tween( object.rotation )
-  //       .to( rotation, duration )
-  //       // .onUpdate((obj, target, duration)=>{
-  //       //   if(object instanceof THREE.PerspectiveCamera && this.selectedBiscuit == null){
-  //       //     console.error(target, duration);
-  //       //   }
-  //       // })
-  //       .onComplete(resolve)
-  //       .delay(opt.rotationDelay || opt.delay || 0)
-  //       .easing( opt.easing );
-  //       // if(opt.rotationDelay > 0){
-  //       //   tw.delay(opt.rotationDelay);
-  //       // }else if(opt.delay > 0){
-  //       //   tw.delay(opt.delay);
-  //       // }
-  //       tws.push(tw);
-  //     }))
-  //   }
-  //
-  //   if(opt.onComplete){
-  //     Promise.all(promises).then(opt.onComplete);
-  //     // tw = new TWEEN.Tween({}).to({}, duration).onComplete(opt.onComplete);
-  //     // if(opt.delay > 0){
-  //     //   tw.delay(opt.delay);
-  //     // }
-  //     // tws.push(tw);
-  //   }
-  //
-  //   tws.forEach(tw=>tw.start());
-  //   return tws;
+  getObjectByElement(element){
+    return this.root.getObjectById(Number(element.dataset.id));
+  }
+
+  // getObjectById(id){
+  //   return this.root.getObjectById(id);
   // }
+
+  tween(object, target, duration=2000, option?:{
+    offsetPosition?: THREE.Vector3|{x?:number;y?:number;z?:number};
+    lookAtDistance?: number;
+    withPosition?: boolean;
+    withRotation?: boolean;
+    delay?: number;
+    rotationDelay?: number;
+    onComplete?: ()=>void;
+    easing?: any;
+  }):any[]{
+    // console.error("tween", object, target);
+    let opt = Object.assign({}, this.tweenDefOpt, option);
+    let tws = [];
+    let promises = [];
+
+    if(object instanceof HTMLElement){
+      object = this.getObjectByElement(object);
+    }
+
+    if(target instanceof HTMLElement){
+      target = this.getObjectByElement(target);
+    }
+
+    if(object && target && opt.withPosition){
+      promises.push(new Promise(resolve=>{
+        let pos;
+        if(opt.offsetPosition){
+          pos = { x: target.position.x + (opt.offsetPosition.x||0), y: target.position.y + (opt.offsetPosition.y||0), z: target.position.z + (opt.offsetPosition.z||0) };
+        }else{
+          pos = { x: target.position.x, y: target.position.y, z: target.position.z };
+        }
+        if(opt.lookAtDistance){
+          let dirVector = new THREE.Vector3(0, 0, opt.lookAtDistance);
+          dirVector.applyQuaternion(target.quaternion);
+          pos = new THREE.Vector3(pos.x, pos.y, pos.z);
+          pos.add(dirVector);
+        }
+
+        let tw = new TWEEN.Tween( object.position )
+        .to( pos, duration )
+        // .interpolation( TWEEN.Interpolation.Bezier )
+        .delay(opt.delay||0)
+        .onComplete(resolve)
+        .easing( opt.easing );
+
+        tws.push(tw);
+      }))
+    }
+
+    if(object && target && opt.withRotation){
+      promises.push(new Promise(resolve=>{
+        let rotation = ["x","y","z"].reduce((r,ax)=>{
+          //출발점 rotation 노멀라이징.
+          object.rotation[ax] = V3D.math.normalRad(object.rotation[ax]);
+          //목적 회전값과의 거리를 최단회전거리로 변경
+          r[ax] = V3D.math.getDestinationRad(object.rotation[ax], V3D.math.normalRad(target.rotation[ax]));
+          return r;
+        }, {})
+
+        let tw = new TWEEN.Tween( object.rotation )
+        .to( rotation, duration )
+        .onComplete(resolve)
+        .delay(opt.rotationDelay || opt.delay || 0)
+        .easing( opt.easing );
+
+        tws.push(tw);
+      }))
+    }
+
+    if(!this.allowAnimate){
+      console.error("please run v3d.startAnimate() first");
+      // promises.push(new Promise(resolve=>{
+      //   let tween = new TWEEN.Tween({})
+      //   .to({}, duration)
+      //   .onUpdate(()=>{
+      //     console.error("?");
+      //     this.render();
+      //     TWEEN.update();
+      //   })
+      //   .delay(opt.delay||0)
+      //   .onComplete(resolve)
+      //   .easing( opt.easing );
+      //   tws.push(tween);
+      // }))
+    }
+
+    if(opt.onComplete){
+      Promise.all(promises).then(opt.onComplete);
+    }
+
+    tws.forEach(tw=>tw.start());
+    return tws;
+  }
+
+
+  killTween(tws){
+    if(Array.isArray(tws)){
+      tws.forEach(tw=>{
+        if(tw){
+          TWEEN.remove(tw);
+        }
+      })
+      tws.length = 0;
+    }else{
+      if(tws){
+        TWEEN.remove(tws);
+      }
+    }
+  }
+
   //
   // tweenEmpty(duration){
   //   let tween;
@@ -333,18 +384,20 @@ export default class V3D {
   // }
 
 
-
+  animateCallback = null;
   animate = ()=>{
     if(!this.allowAnimate){
       return;
     }
-    requestAnimationFrame(this.animate);
+    if(this.animateCallback){
+      requestAnimationFrame(this.animateCallback);
+    }
     this.time = performance.now();
     this.delta = (this.time - this.prevTime) / 1000;
     this.prevTime = this.time;
     if (this.delta < 0.08){
       this.render();
-      // TWEEN.update();
+      TWEEN.update();
       if(typeof this.onUpdate === "function"){
         this.onUpdate(this.time);
       }
@@ -353,10 +406,12 @@ export default class V3D {
 
   stopAnimate(){
     this.allowAnimate = false;
+    this.animateCallback = null;
   }
 
   startAnimate(){
     this.allowAnimate = true;
+    this.animateCallback = this.animate;
     this.animate();
   }
 

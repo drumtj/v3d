@@ -32,9 +32,8 @@
     // var x = (event.clientX / window.innerWidth) * 2 - 1;
     // var y = -(event.clientY / window.innerHeight) * 2 + 1;
     // box.lookAt(x, y, 0.5);
-
-    //for reuse
-    mouse = v3d.getMouseVector(event, mouse);
+    
+    v3d.getMouseVector(event, mouse);
     box.lookAt(mouse);
 
     v3d.render();

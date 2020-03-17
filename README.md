@@ -16,7 +16,7 @@ $ npm install @drumtj/v3d
 
 Using cdn:
 ```html
-<script src="https://unpkg.com/@drumtj/v3d@1.0.15/dist/v3d.js"></script>
+<script src="https://unpkg.com/@drumtj/v3d@1.0.17/dist/v3d.js"></script>
 ```
 
 CommonJS
@@ -89,6 +89,7 @@ var v3d = new V3D(".container", {
     if(v3d) v3d.root.rotation.y = Math.cos(time/1000);
   }
 });
+v3d.startAnimate();
 ```
 
 ```js
@@ -163,12 +164,54 @@ var object1 = v3d.scene.getObjectByName("test");
 var object2 = v3d.scene.getObjectByName("objectName", true);
 
 var object3 = v3d.scene.getObjectById(4, true);
+
+var object4 = v3d.getObjectByElement(html_element);
+```
+
+```js
+// tween
+// In order to tween, startAnimate must be executed.
+v3d.startAnimate();
+var box1 = v3d.add('<div class="box">');
+var tweens = v3d.tween(v3d.camera, box1);
+```
+
+```js
+//  kill tween
+v3d.killTween(tweens);
+```
+
+```js
+// tween with option
+v3d.startAnimate();
+var box1 = v3d.add('<div class="box">');
+v3d.tween(v3d.camera, box1, 2000, {
+  lookAtDistance: 400
+  //offsetPosition: THREE.Vector3|{x?:number;y?:number;z?:number};
+  //withPosition?: boolean;
+  //withRotation?: boolean;
+  //delay?: number;
+  //rotationDelay?: number;
+  //onComplete?: ()=>void;
+  //easing?: any;
+});
+```
+
+```js
+$(".box").on("click", function(event){
+  v3d.tween(v3d.camera, event.target, 2000, {
+    lookAtDistance: 400
+  })
+})
 ```
 
 
 ```js
 // three js ref
 V3D.THREE
+
+// @tweenjs/tween.js ref
+V3D.TWEEN
 
 // https://threejs.org/docs/#api/en/scenes/Scene
 v3d.scene
@@ -210,6 +253,20 @@ stopAnimate()
 add(selector:string|HTMLElement):CSS3DObject
 checkInCamera(object:CSS3DObject|CSS3DObject[]): boolean|boolean[]
 getMouseVector(event:MouseEvent, refVector?:THREE.Vector3):THREE.Vector3
+cloneEmptyObject(object:THREE.Object3D|CSS3DObject):THREE.Object3D
+getObjectByElement(element:HTMLElement):CSS3DObject
+tween(object:HTMLElement|CSS3DObject|THREE.Object3D, target:HTMLElement|CSS3DObject|THREE.Object3D, duration:number, option?:TweenOption):TWEEN.Tween[]
+killTween(tweens:TWEEN.Tween[])
+interface TweenOption {
+  offsetPosition?: THREE.Vector3|{x?:number;y?:number;z?:number};
+  lookAtDistance?: number;
+  withPosition?: boolean;
+  withRotation?: boolean;
+  delay?: number;
+  rotationDelay?: number;
+  onComplete?: ()=>void;
+  easing?: any;
+}
 ```
 
 ```js
@@ -312,9 +369,10 @@ document.addEventListener("mousemove", function(event){
 ```
 
 ## examples
-- https://drumtj.github.io/v3d/test.html ([source](https://github.com/drumtj/v3d/blob/master/examples/test.html))
-- https://drumtj.github.io/v3d/test2.html ([source](https://github.com/drumtj/v3d/blob/master/examples/test2.html))
-- https://drumtj.github.io/v3d/test3.html ([source](https://github.com/drumtj/v3d/blob/master/examples/test3.html))
+- [multi viewport](https://drumtj.github.io/v3d/test.html) ([source](https://github.com/drumtj/v3d/blob/master/examples/test.html))
+- [mouse pointer lookup](https://drumtj.github.io/v3d/test2.html) ([source](https://github.com/drumtj/v3d/blob/master/examples/test2.html))
+- [dynamic element insertion](https://drumtj.github.io/v3d/test3.html) ([source](https://github.com/drumtj/v3d/blob/master/examples/test3.html))
+- [use camera move plugin](https://drumtj.github.io/v3d/test4.html) ([source](https://github.com/drumtj/v3d/blob/master/examples/test4.html))
 
 ## License
 
