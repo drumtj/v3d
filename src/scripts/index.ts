@@ -1,44 +1,25 @@
 import * as THREE from 'three';
-// import axios from 'axios';
-// import $ from "jquery";
 import TWEEN from "@tweenjs/tween.js";
 import {$, math} from "./Util";
-// import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls.js';
+
 import { CSS3DObject, CSS3DRenderer } from 'three/examples/jsm/renderers/CSS3DRenderer.js';
-// import { WEBGL } from 'three/examples/jsm/WebGL.js';
-// import screenfull from "screenfull";
-// import checkIE from "check-ie";4
-// import loadJS from "load-js";
-
-
-// import {DEBUG, PRELOAD, CAMERA_DISTANCE, TTS_MAX_LENGTH} from "./dev.json";
 
 
 export default class V3D {
   prevTime = performance.now();
   time = 0;
   delta = 0;
-  // ui = null;
+
   scene:THREE.Scene = null;
-  // clickRaycaster = null;
   camera:THREE.PerspectiveCamera = null;
   renderer:CSS3DRenderer = null;
-  // webGLRenderer:THREE.WebGLRenderer = null;
-  // controls = null;
-
-  // cameraTransform = null;
 
 
   viewport = null;
   container = null;
   root = null;
   onUpdate = null;
-  //트윈상태 파악용
-  // isTypeTweening = false;
-  // isTweening = false;
-  // 트윈객체 관리용
-  // cameraTweens = [];
-  // transformTweens = [];
+
   // 트윈 기본옵션
   tweenDefOpt = {
     withPosition: true,
@@ -58,14 +39,6 @@ export default class V3D {
     this.init(selector, opts);
   }
 
-  // static instance;
-  //
-  // static getInstance(selector?, opts?){
-  //   if(!this.instance){
-  //     this.instance = new V3D(selector, opts);
-  //   }
-  //   return this.instance;
-  // }
 
 
   init(selector, opts?) {
@@ -85,15 +58,6 @@ export default class V3D {
     this.scene = new THREE.Scene();
     this.camera = new THREE.PerspectiveCamera(40, viewport.width / viewport.height, 1, 1000);
     this.camera.position.z = 1000;
-
-    // this.scene.fog = new THREE.FogExp2( 0x001932, 0.00015 );
-    // this.scene.background = null;
-    // this.webGLRenderer = new THREE.WebGLRenderer( { alpha: true, antialias: true } );
-    // // this.webGLRenderer.setClearColor( 0x000000, 0 );
-		// this.webGLRenderer.setPixelRatio( window.devicePixelRatio );
-		// this.webGLRenderer.setSize( window.innerWidth, window.innerHeight );
-		// this.$root.append( this.webGLRenderer.domElement );
-
 
     this.renderer = new CSS3DRenderer();
     this.renderer.setSize(viewport.width, viewport.height);
@@ -184,7 +148,12 @@ export default class V3D {
 
 
 
-  add(selector, opts?){
+  add(selector, opts?:{
+    rotation?:{x?:number;y?:number;z?:number}|THREE.Vector3|THREE.Euler;
+    position?:{x?:number;y?:number;z?:number}|THREE.Vector3;
+    name?:string;
+    parent?:THREE.Object3D|CSS3DObject;
+  }){
     let obj, element = $(selector);
     if(element){
       opts = opts || {};
@@ -212,7 +181,11 @@ export default class V3D {
         }
       }
 
-      this.root.add(obj);
+      if(opts.parent && opts.parent.uuid){
+        opts.parent.add(obj);
+      }else{
+        this.root.add(obj);
+      }
     }
     return obj;
   }
@@ -272,11 +245,13 @@ export default class V3D {
     rotationDelay?: number;
     onComplete?: ()=>void;
     easing?: any;
+    // opacity?: number;
   }):any[]{
     // console.error("tween", object, target);
     let opt = Object.assign({}, this.tweenDefOpt, option);
     let tws = [];
     let promises = [];
+    let opacity;
 
     if(object instanceof HTMLElement){
       object = this.getObjectByElement(object);
@@ -284,6 +259,18 @@ export default class V3D {
 
     if(target instanceof HTMLElement){
       target = this.getObjectByElement(target);
+    }else{
+      if(target.opacity !== undefined){
+        opacity = target.opacity;
+      }
+      // for object
+      if(!target.position || !(target.position instanceof THREE.Vector3)){
+        let p = target.position || {};
+        let r = target.rotation || {};
+        target = new THREE.Object3D();
+        target.position.set(p.x||0, p.y||0, p.z||0);
+        target.rotation.set(r.x||0, r.y||0, r.z||0);
+      }
     }
 
     if(object && target && opt.withPosition){
@@ -296,11 +283,20 @@ export default class V3D {
         }
         if(opt.lookAtDistance){
           let dirVector = new THREE.Vector3(0, 0, opt.lookAtDistance);
+          // let qt;
+          // if(target.quaternion){
+          //   qt = target.quaternion;
+          // }else{
+          //   let obj = new THREE.Object3D();
+          //   obj.position.set(pos.x, pos.y, target.position.z);
+          //   obj.rotation.set(target.rotation.x, target.rotation.y, target.rotation.z);
+          //   qt = obj.quaternion;
+          // }
           dirVector.applyQuaternion(target.quaternion);
           pos = new THREE.Vector3(pos.x, pos.y, pos.z);
           pos.add(dirVector);
         }
-
+        // console.error("?", pos);
         let tw = new TWEEN.Tween( object.position )
         .to( pos, duration )
         // .interpolation( TWEEN.Interpolation.Bezier )
@@ -332,21 +328,20 @@ export default class V3D {
       }))
     }
 
+    if(object && target && opacity !== undefined){
+      promises.push(new Promise(resolve=>{
+        let tw = new TWEEN.Tween( object.element.style )
+        .to( {opacity}, duration )
+        .onComplete(resolve)
+        .delay(opt.delay || 0)
+        .easing( opt.easing );
+
+        tws.push(tw);
+      }))
+    }
+
     if(!this.allowAnimate){
       console.error("please run v3d.startAnimate() first");
-      // promises.push(new Promise(resolve=>{
-      //   let tween = new TWEEN.Tween({})
-      //   .to({}, duration)
-      //   .onUpdate(()=>{
-      //     console.error("?");
-      //     this.render();
-      //     TWEEN.update();
-      //   })
-      //   .delay(opt.delay||0)
-      //   .onComplete(resolve)
-      //   .easing( opt.easing );
-      //   tws.push(tween);
-      // }))
     }
 
     if(opt.onComplete){
@@ -386,12 +381,6 @@ export default class V3D {
 
   animateCallback = null;
   animate = ()=>{
-    // if(!this.allowAnimate){
-    //   return;
-    // }
-    // if(this.animateCallback){
-    //   requestAnimationFrame(this.animateCallback);
-    // }
     this.time = performance.now();
     this.delta = (this.time - this.prevTime) / 1000;
     this.prevTime = this.time;
@@ -426,6 +415,5 @@ export default class V3D {
 
   render() {
     this.renderer.render(this.scene, this.camera);
-    // this.webGLRenderer.render(this.scene, this.camera);
   }
 }

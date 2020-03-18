@@ -447,7 +447,53 @@ let cameraMovePlugin = createExternalModuleConfig("CameraMovePlugin", "./cameraM
   plugins: []
 })
 
-let plugins = [cameraMovePlugin];
+let sliderPlugin = createExternalModuleConfig("SliderPlugin", "./sliderPlugin.js", {
+  mode: "production", //"production",// "none"
+  //"@babel/polyfill",
+  entry: ["@babel/polyfill", "./src/scripts/plugins/SliderPlugin.ts"],
+  resolve: {
+    extensions: [".js", ".ts"],
+    modules: [
+      path.resolve('src/'),
+      'node_modules'
+    ]
+  },
+
+  module: {
+    rules: [
+      {
+        test: /\.js$/,
+        use: [
+          {
+            loader: "babel-loader?cachedirectory",
+            options: babelOption
+          }
+        ]
+      },
+      {
+        test: /\.ts$/,
+        use: [
+          {
+            loader: "babel-loader?cachedirectory",
+            options: babelOption
+          },
+          {
+            loader: "ts-loader"
+          }
+        ]
+      }
+    ]
+  },
+  cache: true,
+  devtool: "source-map",
+  output: {
+    path: path.join(__dirname, "dist"),
+    publicPath: 'dist/'
+  },
+  plugins: []
+})
+
+let plugins = [cameraMovePlugin, sliderPlugin];
 
 
 

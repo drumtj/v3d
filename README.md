@@ -16,7 +16,7 @@ $ npm install @drumtj/v3d
 
 Using cdn:
 ```html
-<script src="https://unpkg.com/@drumtj/v3d@1.0.20/dist/v3d.js"></script>
+<script src="https://unpkg.com/@drumtj/v3d@1.0.21/dist/v3d.js"></script>
 ```
 
 CommonJS
@@ -250,12 +250,24 @@ V3D.math.getDestinationRad(fromRad:number, toRad:number):number;
 render() // once
 startAnimate() // render loop
 stopAnimate()
-add(selector:string|HTMLElement):CSS3DObject
+add(selector:string|HTMLElement, option?:AddOption):CSS3DObject
+interface AddOption {
+  rotation?:{x?:number;y?:number;z?:number}|THREE.Vector3|THREE.Euler;
+  position?:{x?:number;y?:number;z?:number}|THREE.Vector3;
+  name?:string;
+  parent?:THREE.Object3D|CSS3DObject;
+}
 checkInCamera(object:CSS3DObject|CSS3DObject[]): boolean|boolean[]
 getMouseVector(event:MouseEvent, refVector?:THREE.Vector3):THREE.Vector3
 cloneEmptyObject(object:THREE.Object3D|CSS3DObject):THREE.Object3D
 getObjectByElement(element:HTMLElement):CSS3DObject
-tween(object:HTMLElement|CSS3DObject|THREE.Object3D, target:HTMLElement|CSS3DObject|THREE.Object3D, duration:number, option?:TweenOption):TWEEN.Tween[]
+
+tween(
+  object:HTMLElement|CSS3DObject|THREE.Object3D, target:HTMLElement|CSS3DObject|THREE.Object3D|{position?:{x?:number;y?:number;z?:number},rotation?:{x?:number;y?:number;z?:number},opacity?:number},
+  duration:number,
+  option?:TweenOption
+):TWEEN.Tween[]
+
 killTween(tweens:TWEEN.Tween[])
 interface TweenOption {
   offsetPosition?: THREE.Vector3|{x?:number;y?:number;z?:number};
@@ -372,8 +384,9 @@ document.addEventListener("mousemove", function(event){
 - [multi viewport](https://drumtj.github.io/v3d/test.html) ([source](https://github.com/drumtj/v3d/blob/master/examples/test.html))
 - [mouse pointer lookup](https://drumtj.github.io/v3d/test2.html) ([source](https://github.com/drumtj/v3d/blob/master/examples/test2.html))
 - [dynamic element insertion](https://drumtj.github.io/v3d/test3.html) ([source](https://github.com/drumtj/v3d/blob/master/examples/test3.html))
-- [use camera move plugin](https://drumtj.github.io/v3d/test4.html) ([source](https://github.com/drumtj/v3d/blob/master/examples/test4.html))
+- [use CameraMovePlugin](https://drumtj.github.io/v3d/test4.html) ([source](https://github.com/drumtj/v3d/blob/master/examples/test4.html))
 - [make a transform model](https://drumtj.github.io/v3d/test5.html) ([source](https://github.com/drumtj/v3d/blob/master/examples/test5.html))
+- [use SliderPlugin](https://drumtj.github.io/v3d/test6.html) ([source](https://github.com/drumtj/v3d/blob/master/examples/test6.html))
 
 ## License
 

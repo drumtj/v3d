@@ -1,27 +1,50 @@
 import V3D from "./index";
 import CameraMovePlugin from "./plugins/CameraMovePlugin";
+import SliderPlugin from "./plugins/SliderPlugin";
 
 test();
 
 function test(){
   var v3d = new V3D(".container");
-  var box = v3d.add('<div class="box">');
-  var mouse;
-  box.element.contentEditable = true;
-  box.element.textContent = "hi~";
+  var boxCount = 10;
+  var boxs = [];
 
-  document.addEventListener("mousemove", function(event){
-    event.preventDefault();
-    // var x = (event.clientX / window.innerWidth) * 2 - 1;
-    // var y = -(event.clientY / window.innerHeight) * 2 + 1;
-    // box.lookAt(x, y, 0.5);
+  for(var i=0; i<boxCount; i++){
+    boxs.push(v3d.add('<div class="box" data-index="'+i+'">'));
+  }
 
-    mouse = v3d.getMouseVector(event, mouse);
-    box.lookAt(mouse);
-
-    v3d.render();
+  var slider = new SliderPlugin(v3d, boxs, {
+    duration: 600
   })
+
+  var btnContainer = document.createElement("div");
+  btnContainer.style.cssText = "position:absolute;left:50%;bottom:10px";
+  document.body.appendChild(btnContainer);
+
+  for(var i=0; i<boxs.length; i++){
+    boxs[i].element.onclick = function(){
+      slider.select(this.dataset.index);
+    }
+    createBtn(i, btnContainer).onclick = (function(){
+      var j=i;
+      return function(){
+        slider.select(j)
+      }
+    }())
+  }
+
+  v3d.startAnimate();
+  slider.select(0);
+
+
+  function createBtn(name, parent?){
+    var btn = document.createElement("button");
+    (parent||document.body).appendChild(btn);
+    btn.textContent = name;
+    return btn;
+  }
 }
+
 
 function test_cameraMovePlugin(){
   var THREE = V3D.THREE;

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ko" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <title></title>
+  <style media="screen">
+      .box {
+        position: relative;
+        display: inline-block;
+        width: 250px;
+        height: 200px;
+        border: 1px solid red;
+        text-align:center;
+      }
+      .box:hover {
+        background-color: rgb(255, 198, 180);
+      }
+    </style>
+</head>
+
+<body>
+  <div class="container">
+  </div>
+  <script type="text/javascript" src="https://unpkg.com/@drumtj/v3d@1.0.21/dist/v3d.js"></script>
+  <script type="text/javascript" src="https://unpkg.com/@drumtj/v3d@1.0.21/dist/sliderPlugin.js"></script>
+  <!-- <script type="text/javascript" src="../dist/v3d.js"></script> -->
+  <!-- <script type="text/javascript" src="../dist/sliderPlugin.js"></script> -->
+  <script type="text/javascript">
+    var v3d = new V3D(".container");
+    var boxCount = 10;
+    var boxs = [];
+
+    for(var i=0; i<boxCount; i++){
+      boxs.push(v3d.add('<div class="box" data-index="'+i+'">'));
+    }
+
+    var slider = new SliderPlugin(v3d, boxs, {
+      duration: 600
+    })
+
+    var btnContainer = document.createElement("div");
+    btnContainer.style.cssText = "position:absolute;left:50%;bottom:10px";
+    document.body.appendChild(btnContainer);
+
+    for(var i=0; i<boxs.length; i++){
+      boxs[i].element.onclick = function(){
+        slider.select(this.dataset.index);
+      }
+      createBtn(i, btnContainer).onclick = (function(){
+        var j=i;
+        return function(){
+          slider.select(j)
+        }
+      }())
+    }
+
+    v3d.startAnimate();
+    slider.select(0);
+
+
+    function createBtn(name, parent){
+      var btn = document.createElement("button");
+      (parent||document.body).appendChild(btn);
+      btn.textContent = name;
+      return btn;
+    }
+  </script>
+</body>
+
+</html>
