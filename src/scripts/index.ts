@@ -268,8 +268,19 @@ export default class V3D {
         let p = target.position || {};
         let r = target.rotation || {};
         target = new THREE.Object3D();
-        target.position.set(p.x||0, p.y||0, p.z||0);
-        target.rotation.set(r.x||0, r.y||0, r.z||0);
+
+        target.position.copy(object.position);
+        if(typeof p.x === "number") target.position.x = p.x;
+        if(typeof p.y === "number") target.position.y = p.y;
+        if(typeof p.z === "number") target.position.z = p.z;
+
+        target.rotation.copy(object.rotation);
+        if(typeof r.x === "number") target.rotation.x = r.x;
+        if(typeof r.y === "number") target.rotation.y = r.y;
+        if(typeof r.z === "number") target.rotation.z = r.z;
+
+        // target.position.set(p.x||object.position.x, p.y||object.position.y, p.z||object.position.z);
+        // target.rotation.set(r.x||object.rotation.x, r.y||object.rotation.y, r.z||object.rotation.z);
       }
     }
 
