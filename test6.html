@@ -22,8 +22,8 @@
 <body>
   <div class="container">
   </div>
-  <script type="text/javascript" src="https://unpkg.com/@drumtj/v3d@1.0.21/dist/v3d.js"></script>
-  <script type="text/javascript" src="https://unpkg.com/@drumtj/v3d@1.0.21/dist/sliderPlugin.js"></script>
+  <script type="text/javascript" src="https://unpkg.com/@drumtj/v3d@1.0.22/dist/v3d.js"></script>
+  <script type="text/javascript" src="https://unpkg.com/@drumtj/v3d@1.0.22/dist/sliderPlugin.js"></script>
   <!-- <script type="text/javascript" src="../dist/v3d.js"></script> -->
   <!-- <script type="text/javascript" src="../dist/sliderPlugin.js"></script> -->
   <script type="text/javascript">
@@ -40,7 +40,7 @@
     })
 
     var btnContainer = document.createElement("div");
-    btnContainer.style.cssText = "position:absolute;left:50%;bottom:10px";
+    btnContainer.style.cssText = "position:absolute;left:40%;bottom:10px";
     document.body.appendChild(btnContainer);
 
     for(var i=0; i<boxs.length; i++){
@@ -53,6 +53,36 @@
           slider.select(j)
         }
       }())
+    }
+
+    createBtn("camera up", btnContainer).onclick = function(){
+      v3d.tween(
+        v3d.camera,
+        {
+          rotation:{
+            x: -0.3
+          },
+          position:{
+            y: 240
+          }
+        },
+        2000
+      )
+    }
+
+    createBtn("camera down", btnContainer).onclick = function(){
+      v3d.tween(
+        v3d.camera,
+        {
+          rotation:{
+            x: 0
+          },
+          position:{
+            y: 0
+          }
+        },
+        2000
+      )
     }
 
     v3d.startAnimate();
