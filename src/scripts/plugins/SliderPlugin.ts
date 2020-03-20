@@ -158,6 +158,56 @@ var pageTransform = {
       list.push({
         rotation: {
           x: 0,
+          y: 90 - (i*angle),
+          z: 0
+        },
+        position: {
+          x: c.x,
+          y: 0,
+          z: c.y + distance
+        },
+        opacity: i==0||i==count-1?0:1
+      })
+    }
+    return list;
+  },
+
+  "cube-inverse-angle": function(){
+    let list = [];
+    let distance = 220;
+    let side = 4;
+    let count = side/2+1;
+    let angle = 360/side;
+    for(let i=0; i<count; i++){
+      let c = V3D.math.getCoord(i*angle, distance);
+      list.push({
+        rotation: {
+          x: 0,
+          y: 90 - (i*angle),
+          z: 0
+        },
+        position: {
+          x: -c.x,
+          y: 0,
+          z: c.y - distance
+        },
+        opacity: i==0||i==count-1?0:1
+      })
+    }
+    return list;
+  },
+
+  "cube-inverse-angle2": function(){
+    let list = [];
+    let distance = 220;
+    let side = 4;
+    let count = side/2+1;
+    let angle = 360/side;
+    for(let i=0; i<count; i++){
+      let c = V3D.math.getCoord(i*-angle, distance);
+      list.push({
+        rotation: {
+          x: 0,
           y: (i*angle) - 90,
           z: 0
         },
@@ -209,11 +259,11 @@ var pageTransform = {
       list.push({
         rotation: {
           x: 0,
-          y: (i*angle) - 90,
+          y: 90 - (i*angle),
           z: 0
         },
         position: {
-          x: -c.x,
+          x: c.x,
           y: 0,
           z: c.y + distance
         },
@@ -242,6 +292,31 @@ var pageTransform = {
           x: -c.x,
           y: 0,
           z: c.y - distance
+        },
+        opacity: i==0||i==count-1?0:1
+      })
+    }
+    return list;
+  },
+
+  "octagon-inverse-angle2": function(){
+    let list = [];
+    let distance = 300;
+    let side = 8;
+    let count = side/2+1;
+    let angle = 360/side;
+    for(let i=0; i<count; i++){
+      let c = V3D.math.getCoord(i*-angle, distance);
+      list.push({
+        rotation: {
+          x: 0,
+          y: (i*angle) - 90,
+          z: 0
+        },
+        position: {
+          x: -c.x,
+          y: 0,
+          z: c.y + distance
         },
         opacity: i==0||i==count-1?0:1
       })
@@ -285,11 +360,11 @@ var pageTransform = {
       list.push({
         rotation: {
           x: 0,
-          y: (i*angle) - 90,
+          y: 90 - (i*angle),
           z: 0
         },
         position: {
-          x: -c.x,
+          x: c.x,
           y: 0,
           z: c.y + distance
         },
@@ -317,6 +392,31 @@ var pageTransform = {
           x: -c.x,
           y: 0,
           z: c.y - distance
+        },
+        opacity: i==0||i==count-1?0:1
+      })
+    }
+    return list;
+  },
+
+  "dodecagon-inverse-angle2": function(){
+    let list = [];
+    let distance = 500;
+    let side = 12;
+    let count = side/2+1;
+    let angle = 360/side;
+    for(let i=0; i<count; i++){
+      let c = V3D.math.getCoord(i*-angle, distance);
+      list.push({
+        rotation: {
+          x: 0,
+          y: (i*angle) - 90,
+          z: 0
+        },
+        position: {
+          x: -c.x,
+          y: 0,
+          z: c.y + distance
         },
         opacity: i==0||i==count-1?0:1
       })
