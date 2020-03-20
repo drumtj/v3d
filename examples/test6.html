@@ -22,8 +22,8 @@
 <body>
   <div class="container">
   </div>
-  <script type="text/javascript" src="https://unpkg.com/@drumtj/v3d@1.0.22/dist/v3d.js"></script>
-  <script type="text/javascript" src="https://unpkg.com/@drumtj/v3d@1.0.22/dist/sliderPlugin.js"></script>
+  <script type="text/javascript" src="https://unpkg.com/@drumtj/v3d@1.0.23/dist/v3d.js"></script>
+  <script type="text/javascript" src="https://unpkg.com/@drumtj/v3d@1.0.23/dist/sliderPlugin.js"></script>
   <!-- <script type="text/javascript" src="../dist/v3d.js"></script> -->
   <!-- <script type="text/javascript" src="../dist/sliderPlugin.js"></script> -->
   <script type="text/javascript">
@@ -36,7 +36,8 @@
     }
 
     var slider = new SliderPlugin(v3d, boxs, {
-      duration: 600
+      duration: 600,
+      // activeSlideOffsetPosition: {z:200}
     })
 
     var btnContainer = document.createElement("div");
@@ -59,12 +60,8 @@
       v3d.tween(
         v3d.camera,
         {
-          rotation:{
-            x: -0.3
-          },
-          position:{
-            y: 240
-          }
+          rotation:{x: -20},
+          position:{y: 240}
         },
         2000
       )
@@ -74,18 +71,33 @@
       v3d.tween(
         v3d.camera,
         {
-          rotation:{
-            x: 0
-          },
-          position:{
-            y: 0
-          }
+          rotation:{x: 0},
+          position:{y: 0}
         },
         2000
       )
     }
 
+    var typeLabel = document.createElement('label');
+    typeLabel.textContent = "slide type:";
+    typeLabel.style.marginLeft = "10px";
+    btnContainer.appendChild(typeLabel);
+
+    var typeSelectTag = document.createElement('select');
+    slider.getTransformNames().forEach(function(name){
+      var optionTag = document.createElement('option');
+      optionTag.value = name;
+      optionTag.textContent = name;
+      typeSelectTag.appendChild(optionTag);
+    })
+    btnContainer.appendChild(typeSelectTag);
+
+    typeSelectTag.onchange = function(){
+      slider.changeType(typeSelectTag.value);
+    }
+
     v3d.startAnimate();
+    // slider.setScale(0.8);
     slider.select(0);
 
 

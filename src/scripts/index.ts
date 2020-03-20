@@ -30,6 +30,7 @@ export default class V3D {
 
   options;
   allowAnimate;
+  clock = new THREE.Clock();
 
   static math = math;
   static THREE = THREE;
@@ -267,17 +268,38 @@ export default class V3D {
       if(!target.position || !(target.position instanceof THREE.Vector3)){
         let p = target.position || {};
         let r = target.rotation || {};
-        target = new THREE.Object3D();
+        // console.error(target);
+        if(!target.isRadian){
+          for(let a in r){
+            // console.error(a, r[a]);
+            r[a] = math.degToRad(r[a]);
+          }
+          target.isRadian = true;
+        }
 
-        target.position.copy(object.position);
-        if(typeof p.x === "number") target.position.x = p.x;
-        if(typeof p.y === "number") target.position.y = p.y;
-        if(typeof p.z === "number") target.position.z = p.z;
+        if(opt.lookAtDistance){
+          target = new THREE.Object3D();
 
-        target.rotation.copy(object.rotation);
-        if(typeof r.x === "number") target.rotation.x = r.x;
-        if(typeof r.y === "number") target.rotation.y = r.y;
-        if(typeof r.z === "number") target.rotation.z = r.z;
+          target.position.copy(object.position);
+          if(typeof p.x === "number") target.position.x = p.x;
+          if(typeof p.y === "number") target.position.y = p.y;
+          if(typeof p.z === "number") target.position.z = p.z;
+
+          target.rotation.copy(object.rotation);
+          if(typeof r.x === "number") target.rotation.x = r.x;
+          if(typeof r.y === "number") target.rotation.y = r.y;
+          if(typeof r.z === "number") target.rotation.z = r.z;
+        }else{
+          target.position = object.position.clone();
+          if(typeof p.x === "number") target.position.x = p.x;
+          if(typeof p.y === "number") target.position.y = p.y;
+          if(typeof p.z === "number") target.position.z = p.z;
+
+          target.rotation = object.rotation.clone();
+          if(typeof r.x === "number") target.rotation.x = r.x;
+          if(typeof r.z === "number") target.rotation.z = r.z;
+          if(typeof r.y === "number") target.rotation.y = r.y;
+        }
 
         // target.position.set(p.x||object.position.x, p.y||object.position.y, p.z||object.position.z);
         // target.rotation.set(r.x||object.rotation.x, r.y||object.rotation.y, r.z||object.rotation.z);
@@ -392,9 +414,10 @@ export default class V3D {
 
   animateCallback = null;
   animate = ()=>{
+    this.delta = this.clock.getDelta();
     this.time = performance.now();
-    this.delta = (this.time - this.prevTime) / 1000;
-    this.prevTime = this.time;
+    // this.delta = (this.time - this.prevTime) / 1000;
+    // this.prevTime = this.time;
     if (this.delta < 0.08){
       if(typeof this.onUpdate === "function"){
         this.onUpdate(this.time);

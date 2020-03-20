@@ -16,7 +16,7 @@ $ npm install @drumtj/v3d
 
 Using cdn:
 ```html
-<script src="https://unpkg.com/@drumtj/v3d@1.0.22/dist/v3d.js"></script>
+<script src="https://unpkg.com/@drumtj/v3d@1.0.23/dist/v3d.js"></script>
 ```
 
 CommonJS
@@ -373,7 +373,7 @@ for(var i=0; i<boxCount; i++){
 
 document.addEventListener("mousemove", function(event){
   event.preventDefault();
-  mouse = v3d.getMouseVector(event, mouse);
+  v3d.getMouseVector(event, mouse);
   mouse.y *= 0.2;
   v3d.camera.lookAt(mouse);
   v3d.render();

@@ -2,23 +2,46 @@ import V3D from "./index";
 import CameraMovePlugin from "./plugins/CameraMovePlugin";
 import SliderPlugin from "./plugins/SliderPlugin";
 
-test();
+import {FirstPersonControls} from 'three/examples/jsm/controls/FirstPersonControls.js';
 
-function test(){
+test_sliderPlugin();
+
+function test_sliderPlugin(){
   var v3d = new V3D(".container");
   var boxCount = 10;
   var boxs = [];
+
+  // var controls:any = new FirstPersonControls( v3d.camera, v3d.renderer.domElement );
+  // controls.lookSpeed = 0.2;
+  // controls.movementSpeed = 1000;
+  // controls.activeLook = false;
+  //
+  // v3d.onUpdate = function(){
+  //   if(controls.mouseDragOn){
+  //     if(!controls.activeLook){
+  //       controls.activeLook = true;
+  //     }
+  //   }else{
+  //     if(controls.activeLook){
+  //       controls.activeLook = false;
+  //     }
+  //   }
+	// 	controls.update( v3d.delta );
+  // }
+
+  window['v3d'] = v3d;
 
   for(var i=0; i<boxCount; i++){
     boxs.push(v3d.add('<div class="box" data-index="'+i+'">'));
   }
 
   var slider = new SliderPlugin(v3d, boxs, {
-    duration: 600
+    duration: 600,
+    // activeSlideOffsetPosition: {z:200}
   })
 
   var btnContainer = document.createElement("div");
-  btnContainer.style.cssText = "position:absolute;left:50%;bottom:10px";
+  btnContainer.style.cssText = "position:absolute;left:40%;bottom:10px";
   document.body.appendChild(btnContainer);
 
   for(var i=0; i<boxs.length; i++){
@@ -33,11 +56,52 @@ function test(){
     }())
   }
 
+  createBtn("camera up", btnContainer).onclick = function(){
+    v3d.tween(
+      v3d.camera,
+      {
+        rotation:{x: -20},
+        position:{y: 240}
+      },
+      2000
+    )
+  }
+
+  createBtn("camera down", btnContainer).onclick = function(){
+    v3d.tween(
+      v3d.camera,
+      {
+        rotation:{x: 0},
+        position:{y: 0}
+      },
+      2000
+    )
+  }
+
+  var typeLabel = document.createElement('label');
+  typeLabel.textContent = "slide type:";
+  typeLabel.style.marginLeft = "10px";
+  btnContainer.appendChild(typeLabel);
+
+  var typeSelectTag = document.createElement('select');
+  slider.getTransformNames().forEach(function(name){
+    var optionTag = document.createElement('option');
+    optionTag.value = name;
+    optionTag.textContent = name;
+    typeSelectTag.appendChild(optionTag);
+  })
+  btnContainer.appendChild(typeSelectTag);
+
+  typeSelectTag.onchange = function(){
+    slider.changeType(typeSelectTag.value);
+  }
+
   v3d.startAnimate();
+  // slider.setScale(0.8);
   slider.select(0);
 
 
-  function createBtn(name, parent?){
+  function createBtn(name, parent){
     var btn = document.createElement("button");
     (parent||document.body).appendChild(btn);
     btn.textContent = name;
