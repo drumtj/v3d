@@ -15,10 +15,13 @@
     "pull": "git pull origin master --allow-unrelated-histories"
   },
   "keywords": [
+    "v3d",
+    "view3d",
     "3d",
     "css3d",
     "three",
-    "3dview"
+    "3dview",
+    "slide"
   ],
   "homepage": "https://github.com/drumtj/v3d",
   "repository": {

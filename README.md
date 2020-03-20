@@ -381,6 +381,7 @@ document.addEventListener("mousemove", function(event){
 ```
 
 ## examples
+- [basic](https://drumtj.github.io/v3d/test1.html) ([source](https://github.com/drumtj/v3d/blob/master/examples/test1.html))
 - [multi viewport](https://drumtj.github.io/v3d/test.html) ([source](https://github.com/drumtj/v3d/blob/master/examples/test.html))
 - [mouse pointer lookup](https://drumtj.github.io/v3d/test2.html) ([source](https://github.com/drumtj/v3d/blob/master/examples/test2.html))
 - [dynamic element insertion](https://drumtj.github.io/v3d/test3.html) ([source](https://github.com/drumtj/v3d/blob/master/examples/test3.html))
