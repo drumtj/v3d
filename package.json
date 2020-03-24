@@ -1,6 +1,6 @@
 {
   "name": "@drumtj/v3d",
-  "version": "1.0.25",
+  "version": "1.0.26",
   "description": "simple 3d view",
   "main": "./dist/v3d.js",
   "scripts": {
