@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ko" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <title></title>
+  <style media="screen">
+    html, body {
+      padding: 0px;
+      margin: 0px;
+    }
+    .wall {
+      padding: 10px;
+      background-image: url(https://cdn.pixabay.com/photo/2017/03/25/03/18/brick-2172682_960_720.jpg);
+      user-select: none;
+    }
+
+    .wall * {
+      padding-top: 400px;
+      padding-right: 500px;
+      padding-left: 500px;
+      width: 1280px;
+      height: 768px;
+    }
+
+    .top {
+      background-image: url(https://post-phinf.pstatic.net/MjAxOTA5MjNfMTA2/MDAxNTY5MjE0MDE1NTkz.7icp4CUVf-ZF9BW6SX7aafP1qz1CY20JOray3xN7XDgg.RlCQZWU6XWQ3MQzbOwi8eJR-J7bo7i7KEQ5uLkKNH7Ig.PNG/V.png?type=w1200);
+      user-select: none;
+    }
+
+    .bottom {
+      background-image: url(https://data.photo-ac.com/data/thumbnails/32/32a4f277a0beaac4d8571192d354636a_t.jpeg);
+      user-select: none;
+    }
+    .temp {
+      display: none;
+    }
+    .help {
+      padding: 10px;
+      font-size: 16pt;
+      color: yellow;
+      background-color: rgba(0, 0, 0, 0.55);
+      position: absolute;
+      z-index: 99999;
+      left: 40%;
+      top: 10px;
+    }
+  </style>
+</head>
+
+<body>
+  <span class="help">
+    move : W,A,S,D / look around : drag
+  </span>
+  <div class="temp">
+    <div class="top"></div>
+    <div class="wall left-wall">
+      <!-- <iframe src="https://threejs.org/docs/#api/en/materials/Material" frameborder="0" width="1280" height="100%"></iframe> -->
+      <img src="https://data2.1freewallpapers.com/detail/sunset-mountains-volcano.jpg"/>
+      <img src="https://s2.best-wallpaper.net/wallpaper/1920x1200/1807/Volcano-stone-magma_1920x1200.jpg"/>
+      <iframe src="https://m.blog.naver.com/PostView.nhn?blogId=gisf2011&logNo=80135834573&proxyReferer=https%3A%2F%2Fwww.google.com%2F" frameborder="0" width="1280" height="100%"></iframe>
+    </div>
+    <div class="wall right-wall">
+      <iframe width="1280" height="712" src="https://www.youtube.com/embed/oKv3T6mDE6c" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      <iframe width="1280" height="712" src="https://www.youtube.com/embed/-uNSKX0S1sQ" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      <iframe width="1280" height="712" src="https://www.youtube.com/embed/AoNc4CL1dwg" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+    <div class="wall front-wall">
+      <iframe width="1280" height="712" src="https://www.youtube.com/embed/5gbmKGbIeL8" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      <iframe width="1280" height="720" src="https://www.youtube.com/embed/LyXbIJTEsUk" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      <iframe width="1280" height="720" src="https://www.youtube.com/embed/9-Zbdd_gc5o" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+    <div class="wall back-wall"></div>
+    <div class="bottom"></div>
+  </div>
+
+  <div class="container"></div>
+
+  <script type="text/javascript" src="https://unpkg.com/@drumtj/v3d@1.0.26/dist/v3d.js"></script>
+  <script type="text/javascript" src="https://unpkg.com/@drumtj/v3d@1.0.26/dist/fpsControlPlugin.js"></script>
+  <!-- <script type="text/javascript" src="../dist/v3d.js"></script> -->
+  <!-- <script type="text/javascript" src="../dist/fpsControlPlugin.js"></script> -->
+  <script type="text/javascript">
+    var v3d = new V3D(".container", {
+      camera:{position:{y:550}}
+    });
+
+    var wallHeight = 1500;
+    var wallWidth = 7000;
+    var bottomHeight = 7000;
+    var bottomWidth = 7000;
+
+    var rightWall = v3d.add('.right-wall', {
+      rotation: {y: -90},
+      position: {x: bottomWidth/2, y:wallHeight/2},
+      style: {
+        width: wallWidth + "px",
+        height: wallHeight + "px"
+      }
+    })
+
+    var leftWall = v3d.add('.left-wall', {
+      rotation: {y: 90},
+      position: {x: -bottomWidth/2, y:wallHeight/2},
+      style: {
+        width: wallWidth + "px",
+        height: wallHeight + "px"
+      }
+    })
+
+    var frontWall = v3d.add('.front-wall', {
+      position: {y:wallHeight/2, z:-wallWidth/2},
+      style: {
+        width: bottomWidth + "px",
+        height: wallHeight + "px"
+      }
+    })
+
+    var backWall = v3d.add('.back-wall', {
+      position: {y:wallHeight/2, z:wallWidth/2},
+      style: {
+        width: bottomWidth + "px",
+        height: wallHeight + "px"
+      }
+    })
+
+    var top = v3d.add('.top', {
+      rotation: {x: -90},
+      position: {y: wallHeight},
+      style: {
+        width: bottomWidth + "px",
+        height: bottomHeight + "px"
+      }
+    })
+
+    var bottom = v3d.add('.bottom', {
+      rotation: {x: -90},
+      style: {
+        width: bottomWidth + "px",
+        height: bottomHeight + "px"
+      }
+    })
+
+    function lockWall(){
+      leftWall.element.style.pointerEvents = "none";
+      rightWall.element.style.pointerEvents = "none";
+      frontWall.element.style.pointerEvents = "none";
+      backWall.element.style.pointerEvents = "none";
+    }
+    function unlockWall(){
+      leftWall.element.style.pointerEvents = "all";
+      rightWall.element.style.pointerEvents = "all";
+      frontWall.element.style.pointerEvents = "all";
+      backWall.element.style.pointerEvents = "all";
+    }
+
+
+    let controls = new FpsControlPlugin(v3d);
+    controls.onMouseDown = lockWall;
+    controls.onMouseUp = unlockWall;
+
+    v3d.startAnimate();
+  </script>
+</body>
+
+</html>
