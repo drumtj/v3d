@@ -1,10 +1,94 @@
 import V3D from "./index";
 import CameraMovePlugin from "./plugins/CameraMovePlugin";
 import SliderPlugin from "./plugins/SliderPlugin";
+import FpsControlPlugin from "./plugins/FpsControlPlugin";
 
 import {FirstPersonControls} from 'three/examples/jsm/controls/FirstPersonControls.js';
 
-test_sliderPlugin();
+test_fpsCameraPlugin();
+
+function test_fpsCameraPlugin(){
+  var v3d = new V3D(".container", {
+    camera:{position:{y:550}}
+  });
+
+  window['v3d'] = v3d;
+  var wallHeight = 1500;
+  var wallWidth = 7000;
+  var bottomHeight = 7000;
+  var bottomWidth = 7000;
+
+  var rightWall = v3d.add('.right-wall', {
+    rotation: {y: -90},
+    position: {x: bottomWidth/2, y:wallHeight/2},
+    style: {
+      width: wallWidth + "px",
+      height: wallHeight + "px"
+    }
+  })
+
+  var leftWall = v3d.add('.left-wall', {
+    rotation: {y: 90},
+    position: {x: -bottomWidth/2, y:wallHeight/2},
+    style: {
+      width: wallWidth + "px",
+      height: wallHeight + "px"
+    }
+  })
+
+  var frontWall = v3d.add('.front-wall', {
+    position: {y:wallHeight/2, z:-wallWidth/2},
+    style: {
+      width: bottomWidth + "px",
+      height: wallHeight + "px"
+    }
+  })
+
+  var backWall = v3d.add('.back-wall', {
+    position: {y:wallHeight/2, z:wallWidth/2},
+    style: {
+      width: bottomWidth + "px",
+      height: wallHeight + "px"
+    }
+  })
+
+  var top = v3d.add('.top', {
+    rotation: {x: -90},
+    position: {y: wallHeight},
+    style: {
+      width: bottomWidth + "px",
+      height: bottomHeight + "px"
+    }
+  })
+
+  var bottom = v3d.add('.bottom', {
+    rotation: {x: -90},
+    style: {
+      width: bottomWidth + "px",
+      height: bottomHeight + "px"
+    }
+  })
+
+  function lockWall(){
+    leftWall.element.style.pointerEvents = "none";
+    rightWall.element.style.pointerEvents = "none";
+    frontWall.element.style.pointerEvents = "none";
+    backWall.element.style.pointerEvents = "none";
+  }
+  function unlockWall(){
+    leftWall.element.style.pointerEvents = "all";
+    rightWall.element.style.pointerEvents = "all";
+    frontWall.element.style.pointerEvents = "all";
+    backWall.element.style.pointerEvents = "all";
+  }
+
+
+  let controls = new FpsControlPlugin(v3d);
+  controls.onMouseDown = lockWall;
+  controls.onMouseUp = unlockWall;
+
+  v3d.startAnimate();
+}
 
 function test_sliderPlugin(){
   var v3d = new V3D(".container");

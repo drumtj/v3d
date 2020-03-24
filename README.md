@@ -16,7 +16,7 @@ $ npm install @drumtj/v3d
 
 Using cdn:
 ```html
-<script src="https://unpkg.com/@drumtj/v3d@1.0.24/dist/v3d.js"></script>
+<script src="https://unpkg.com/@drumtj/v3d@1.0.26/dist/v3d.js"></script>
 ```
 
 CommonJS
@@ -133,6 +133,13 @@ v3d.render();
 v3d.add("#target", {
   rotation: {
     x: -10
+  },
+  position: {
+    x: 100
+  },
+  // css style
+  style: {
+    width: "100px"
   }
 });
 v3d.render();
@@ -255,6 +262,7 @@ interface AddOption {
   rotation?:{x?:number;y?:number;z?:number}|THREE.Vector3|THREE.Euler;
   position?:{x?:number;y?:number;z?:number}|THREE.Vector3;
   name?:string;
+  style?:any;
   parent?:THREE.Object3D|CSS3DObject;
 }
 checkInCamera(object:CSS3DObject|CSS3DObject[]): boolean|boolean[]
@@ -388,6 +396,7 @@ document.addEventListener("mousemove", function(event){
 - [use CameraMovePlugin](https://drumtj.github.io/v3d/test4.html) ([source](https://github.com/drumtj/v3d/blob/master/examples/test4.html))
 - [make a transform model](https://drumtj.github.io/v3d/test5.html) ([source](https://github.com/drumtj/v3d/blob/master/examples/test5.html))
 - [use SliderPlugin](https://drumtj.github.io/v3d/test6.html) ([source](https://github.com/drumtj/v3d/blob/master/examples/test6.html))
+- [use fpsControlPlugin](https://drumtj.github.io/v3d/test7.html) ([source](https://github.com/drumtj/v3d/blob/master/examples/test7.html))
 
 ## License
 

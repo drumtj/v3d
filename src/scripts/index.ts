@@ -147,11 +147,21 @@ export default class V3D {
     }
   }
 
-
+  object(selector?){
+    let obj, element = $(selector);
+    if(element){
+      obj = new CSS3DObject(element);
+    }else{
+      obj = new CSS3DObject($('<div>'));
+    }
+    obj.element.dataset.id = obj.id;
+    return obj;
+  }
 
   add(selector, opts?:{
     rotation?:{x?:number;y?:number;z?:number}|THREE.Vector3|THREE.Euler;
     position?:{x?:number;y?:number;z?:number}|THREE.Vector3;
+    style?:any;
     name?:string;
     parent?:THREE.Object3D|CSS3DObject;
   }){
@@ -179,6 +189,12 @@ export default class V3D {
           if(/^(x|y|z)$/.test(axis)){
             obj.position[axis] = opts.position[axis];
           }
+        }
+      }
+
+      if(opts.style){
+        for(let o in opts.style){
+          obj.element.style[o] = opts.style[o];
         }
       }
 
@@ -422,9 +438,32 @@ export default class V3D {
       if(typeof this.onUpdate === "function"){
         this.onUpdate(this.time);
       }
+      let v, t = this.updateCallbackList.keys();
+      while(1){
+        v = t.next();
+        if(v.done){
+          break;
+        }
+        v.value(this.time);
+      }
       TWEEN.update();
       this.render();
     }
+  }
+
+  updateCallbackList = new Map();
+  addUpdateCallback(fn){
+    if(typeof fn === "function"){
+      this.updateCallbackList.set(fn, 1);
+    }
+  }
+
+  removeUpdateCallback(fn){
+    this.updateCallbackList.delete(fn);
+  }
+
+  clearUpdateCallback(){
+    this.updateCallbackList.clear();
   }
 
   stopAnimate(){

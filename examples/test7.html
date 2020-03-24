@@ -75,6 +75,92 @@
   </div>
 
   <div class="container"></div>
+
+  <script type="text/javascript" src="https://unpkg.com/@drumtj/v3d@1.0.26/dist/v3d.js"></script>
+  <script type="text/javascript" src="https://unpkg.com/@drumtj/v3d@1.0.26/dist/fpsControlPlugin.js"></script>
+  <!-- <script type="text/javascript" src="../dist/v3d.js"></script> -->
+  <!-- <script type="text/javascript" src="../dist/fpsControlPlugin.js"></script> -->
+  <script type="text/javascript">
+    var v3d = new V3D(".container", {
+      camera:{position:{y:550}}
+    });
+
+    var wallHeight = 1500;
+    var wallWidth = 7000;
+    var bottomHeight = 7000;
+    var bottomWidth = 7000;
+
+    var rightWall = v3d.add('.right-wall', {
+      rotation: {y: -90},
+      position: {x: bottomWidth/2, y:wallHeight/2},
+      style: {
+        width: wallWidth + "px",
+        height: wallHeight + "px"
+      }
+    })
+
+    var leftWall = v3d.add('.left-wall', {
+      rotation: {y: 90},
+      position: {x: -bottomWidth/2, y:wallHeight/2},
+      style: {
+        width: wallWidth + "px",
+        height: wallHeight + "px"
+      }
+    })
+
+    var frontWall = v3d.add('.front-wall', {
+      position: {y:wallHeight/2, z:-wallWidth/2},
+      style: {
+        width: bottomWidth + "px",
+        height: wallHeight + "px"
+      }
+    })
+
+    var backWall = v3d.add('.back-wall', {
+      position: {y:wallHeight/2, z:wallWidth/2},
+      style: {
+        width: bottomWidth + "px",
+        height: wallHeight + "px"
+      }
+    })
+
+    var top = v3d.add('.top', {
+      rotation: {x: -90},
+      position: {y: wallHeight},
+      style: {
+        width: bottomWidth + "px",
+        height: bottomHeight + "px"
+      }
+    })
+
+    var bottom = v3d.add('.bottom', {
+      rotation: {x: -90},
+      style: {
+        width: bottomWidth + "px",
+        height: bottomHeight + "px"
+      }
+    })
+
+    function lockWall(){
+      leftWall.element.style.pointerEvents = "none";
+      rightWall.element.style.pointerEvents = "none";
+      frontWall.element.style.pointerEvents = "none";
+      backWall.element.style.pointerEvents = "none";
+    }
+    function unlockWall(){
+      leftWall.element.style.pointerEvents = "all";
+      rightWall.element.style.pointerEvents = "all";
+      frontWall.element.style.pointerEvents = "all";
+      backWall.element.style.pointerEvents = "all";
+    }
+
+
+    let controls = new FpsControlPlugin(v3d);
+    controls.onMouseDown = lockWall;
+    controls.onMouseUp = unlockWall;
+
+    v3d.startAnimate();
+  </script>
 </body>
 
 </html>
