@@ -16,7 +16,7 @@ $ npm install @drumtj/v3d
 
 Using cdn:
 ```html
-<script src="https://unpkg.com/@drumtj/v3d@1.0.26/dist/v3d.js"></script>
+<script src="https://unpkg.com/@drumtj/v3d@1.0.27/dist/v3d.js"></script>
 ```
 
 CommonJS
@@ -214,11 +214,28 @@ $(".box").on("click", function(event){
 
 
 ```js
+
+//////// static method////////
 // three js ref
 V3D.THREE
 
 // @tweenjs/tween.js ref
 V3D.TWEEN
+
+// math functions
+V3D.math.getDeg(x1:number, y1:number, x2:number, y2:number):number
+V3D.math.getRad(x1:number, y1:number, x2:number, y2:number):number
+V3D.math.getCoord(angle:number, distance:number):{x:number, y:number}
+V3D.math.degToRad(degree:number):number
+V3D.math.radToDeg(radian:number):number
+V3D.math.distance(x1:number, y1:number, x2:number, y2:number):number
+V3D.math.normalRad(rad:number):number
+V3D.math.randInt(low:number, high:number):number
+V3D.math.randFloat(low:number, high:number):number
+V3D.math.getDestinationRad(fromRad:number, toRad:number):number;
+
+
+//////// member property////////
 
 // https://threejs.org/docs/#api/en/scenes/Scene
 v3d.scene
@@ -238,17 +255,8 @@ v3d.root
 // viewport element.  v3d.renderer.domElement;
 v3d.viewport
 
-// math functions
-V3D.math.getDeg(x1:number, y1:number, x2:number, y2:number):number
-V3D.math.getRad(x1:number, y1:number, x2:number, y2:number):number
-V3D.math.getCoord(angle:number, distance:number):{x:number, y:number}
-V3D.math.degToRad(degree:number):number
-V3D.math.radToDeg(radian:number):number
-V3D.math.distance(x1:number, y1:number, x2:number, y2:number):number
-V3D.math.normalRad(rad:number):number
-V3D.math.randInt(low:number, high:number):number
-V3D.math.randFloat(low:number, high:number):number
-V3D.math.getDestinationRad(fromRad:number, toRad:number):number;
+// update callback
+v3d.onUpdate:(time:number)=>void;
 
 
 
@@ -287,6 +295,10 @@ interface TweenOption {
   onComplete?: ()=>void;
   easing?: any;
 }
+
+addUpdateCallback(callback:(time:number)=>void):void
+removeUpdateCallback(callbackRef:Function)
+clearUpdateCallback()
 ```
 
 ```js

@@ -55,14 +55,14 @@ export default class FpsCOntrols {
         var movementX = event.movementX || event.mozMovementX || event.webkitMovementX || 0;
   		  var movementY = event.movementY || event.mozMovementY || event.webkitMovementY || 0;
 
-        euler.setFromQuaternion( this.v3d.camera.quaternion );
+        euler.setFromQuaternion( v3d.camera.quaternion );
 
     		euler.y -= movementX * 0.002;
     		euler.x -= movementY * 0.002;
 
     		euler.x = Math.max( - PI_2, Math.min( PI_2, euler.x ) );
 
-    		this.v3d.camera.quaternion.setFromEuler( euler );
+    		v3d.camera.quaternion.setFromEuler( euler );
       }
     });
 
