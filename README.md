@@ -16,7 +16,7 @@ $ npm install @drumtj/v3d
 
 Using cdn:
 ```html
-<script src="https://unpkg.com/@drumtj/v3d@1.0.27/dist/v3d.js"></script>
+<script src="https://unpkg.com/@drumtj/v3d@1.0.28/dist/v3d.js"></script>
 ```
 
 CommonJS
