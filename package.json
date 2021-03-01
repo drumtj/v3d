@@ -60,6 +60,6 @@
   },
   "dependencies": {
     "@tweenjs/tween.js": "^18.5.0",
-    "three": "^0.111.0"
+    "three": "^0.125.0"
   }
 }
